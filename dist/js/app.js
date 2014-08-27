@@ -36301,7 +36301,7 @@ return jQuery;
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],26:[function(require,module,exports){
-(function (root, ng) {
+(function (ng) {
 
 	'use strict';
 
@@ -36332,7 +36332,7 @@ return jQuery;
 		console.log( '`app` init' );
 	});
 
-}(this, require('angular')));
+}(require('angular')));
 },{"./modules/core":31,"./modules/dialogues":37,"./modules/messages":42,"angular":22}],27:[function(require,module,exports){
 (function (ng) {
 
@@ -36727,7 +36727,7 @@ return jQuery;
 
 }(require('angular')));
 },{"./../../../utils/mount":46,"./dialogue.ctrl":33,"./dialogue.dir":34,"./dialogue.srv":35,"angular":22}],37:[function(require,module,exports){
-(function (root, ng) {
+(function (ng) {
 
 	'use strict';
 
@@ -36760,7 +36760,7 @@ return jQuery;
 	// 
 	mount(require('./controller'));
 
-}(this, require('angular')));
+}(require('angular')));
 },{"./../../utils/mount":46,"./controller":32,"./dialogue":36,"angular":22}],38:[function(require,module,exports){
 (function (ng) {
 
@@ -37105,16 +37105,21 @@ return jQuery;
 
 }(window.angular));
 },{"jquery":24}],46:[function(require,module,exports){
-'use strict';
+(function () {
 
-module.exports = function (comps) {
-	if ( ! Array.isArray(comps)) {
-		comps = [comps];
-	}
-	for (var i in comps) {
-		if (comps.hasOwnProperty(i)) {
-			comps[i]();
+	'use strict';
+
+	module.exports = function (comps) {
+		if ( ! Array.isArray(comps)) {
+			comps = [comps];
 		}
-	}
-};
+		for (var i in comps) {
+			if (comps.hasOwnProperty(i)) {
+				comps[i].call(null);
+			}
+		}
+	};
+
+}());
+
 },{}]},{},[26]);

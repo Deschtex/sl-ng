@@ -22,7 +22,9 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-sass": "~0.8.1",
     "browserify": "~5.10.1",
-    "aliasify": "~1.4.0"
+    "aliasify": "~1.4.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-jshint": "~0.10.0"
   },
   "aliasify": {
     "aliases": {

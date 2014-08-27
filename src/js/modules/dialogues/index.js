@@ -1,4 +1,4 @@
-(function (root, ng) {
+(function (ng) {
 
 	'use strict';
 
@@ -31,4 +31,4 @@
 	// 
 	mount(require('./controller'));
 
-}(this, require('angular')));
+}(require('angular')));

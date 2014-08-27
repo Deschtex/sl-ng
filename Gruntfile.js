@@ -1,5 +1,7 @@
 module.exports = function (grunt) {
 
+	'use strict';
+
 	grunt.initConfig({
 		browserify: {
 			options: {
@@ -24,11 +26,33 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+		cssmin: {
+			dist: {
+				files: {
+					'dist/css/app.min.css': 'dist/css/app.css'
+				}
+			}
+		},
 		watch: {
 			js: {
 				files: ['**/*.js'],
 				tasks: ['default']
 			}
+		},
+		jshint: {
+			options: {
+				strict: true,
+				curly: true,
+				eqeqeq: true,
+				undef: true,
+				globals: {
+					"window": true,
+					"console": true,
+					"require": true,
+					"module": true
+				}
+			},
+			all: ['Gruntfile.js', 'src/js/**/*.js']
 		}
 	});
 
@@ -36,9 +60,14 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	grunt.registerTask('default', [
-		'browserify', 'uglify:js', 'sass'
+		'jshint', 'browserify', 'uglify:js', 'sass', 'cssmin'
+	]);
+	grunt.registerTask('dev', [
+		'jshint', 'browserify', 'sass'
 	]);
 
 };

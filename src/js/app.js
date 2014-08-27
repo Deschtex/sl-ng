@@ -1,4 +1,4 @@
-(function (root, ng) {
+(function (ng) {
 
 	'use strict';
 
@@ -29,4 +29,4 @@
 		console.log( '`app` init' );
 	});
 
-}(this, require('angular')));
+}(require('angular')));
