@@ -6,14 +6,21 @@ module.exports = function (grunt) {
 				transform: ['aliasify']
 			},
 			js: {
-				src: 'assets/js/app/app.js',
-				dest: 'assets/js/app.js'
+				src: 'src/js/app.js',
+				dest: 'dist/js/app.js'
 			}
 		},
 		uglify: {
 			js: {
 				files: {
-					'assets/js/app.min.js': ['assets/js/app.js']
+					'dist/js/app.min.js': ['dist/js/app.js']
+				}
+			}
+		},
+		sass: {
+			dist: {
+				files: {
+					'dist/css/app.css': 'src/css/app.scss'
 				}
 			}
 		},
@@ -28,9 +35,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-sass');
 
 	grunt.registerTask('default', [
-		'browserify', 'uglify:js'
+		'browserify', 'uglify:js', 'sass'
 	]);
 
 };

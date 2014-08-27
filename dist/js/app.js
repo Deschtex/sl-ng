@@ -1,825 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (root, ng) {
-
-	'use strict';
-
-	//
-	// Load main app modules
-	// 
-	require('./modules/core');
-	require('./modules/dialogues');
-	require('./modules/messages');
-
-	/**
-	 * @ngdoc module
-	 * @name app
-	 * @description
-	 *
-	 * # app (core module)
-	 * 
-	 * The `app` module is the module being
-	 * loaded by the page and requires all
-	 * other neccessary app modules.
-	 */
-	ng.module('app', [
-		'app.core',
-		'app.dialogues',
-		'app.messages'
-	])
-	.run(function () {
-		console.log( '`app` init' );
-	});
-
-}(this, require('angular')));
-},{"./modules/core":6,"./modules/dialogues":12,"./modules/messages":17,"angular":43}],2:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'Cache', ['DSCacheFactory', F]
-		);
-	};
-
-	/**
-	 * @ngdoc factory
-	 * @module app.core
-	 * @name Cache
-	 */
-	function F (DSCacheFactory) {
-		return ng.extend(DSCacheFactory, {
-			create: function (/*args...*/) {
-				return this.apply(this, arguments);
-			}
-		});
-	}
-
-}(require('angular')));
-},{"angular":43}],3:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var moment = require('moment');
-
-	module.exports = function () {
-		ng.module('app.core').filter('datetime', F);
-	};
-
-	/**
-	 * @ngdoc filter
-	 * @module app.core
-	 * @name datetime
-	 */
-	function F () {
-		var weekdays = [
-			's\xf6ndag', 'm\xe5ndag', 'tisdag', 'onsdag',
-			'torsdag', 'fredag', 'l\xf6rdag'
-		];
-		return function (timestamp, format) {
-			var time = moment(timestamp);
-			if (format === 'long') {
-				return time.format('D MMM YYYY HH:mm');
-			} else if (format === 'short') {
-				var diff = moment().diff(time, 'days');
-				if (diff >= 8) { // 1 week+
-					return time.format('YYYY-MM-DD');
-				} else if (diff > 1 && diff <= 7) { // within a week, excl. yesterday
-					return weekdays[time.day()];
-				} else if (diff === 0) { // today
-					return time.format('HH:mm');
-				} else if (diff === 1) {
-					return 'igår'; // yesterday
-				}
-			}
-		};
-	}
-
-}(require('angular')));
-},{"angular":43,"moment":46}],4:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'EventBus', ['$rootScope', 'EventList', F]
-		);
-	};
-
-	/**
-	 * @ngdoc factory
-	 * @module app.core
-	 * @name EventBus
-	 */
-	function F ($rootScope, EventList) {
-		var isSupportedEvent = (
-			function () {
-				var events = [];
-				for (var i in EventList) {
-					events.push(EventList[i]);
-				}
-				return function (name) {
-					return !!~events.indexOf(name);
-				};
-			}
-		());
-		return ({
-			subscribe: function (name, handler, scope) {
-				if ( ! isSupportedEvent(name)) { // not allowed
-					throw 'EventBus.subscribe(): Event `' + name + '` not supported';
-				}
-				(scope || $rootScope).$on(name, handler);
-			},
-			publish: function (name/*, args...*/) {
-				if ( ! isSupportedEvent(name)) { // not allowed
-					throw 'EventBus.publish(): Event `' + name + '` not supported.';
-				}
-				$rootScope.$broadcast.apply($rootScope, arguments);
-				// console.log( 'EventBus.publish(): `%s`', name );
-			}
-		});
-	}
-
-}(require('angular')));
-
-},{"angular":43}],5:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.core').factory('EventList', F);
-	};
-
-	function F () {
-		return {
-			SWITCH_VIEW: 'switch-view',
-			BEFORE_SWITCH_VIEW: 'before-switch-view',
-			AFTER_SWITCH_VIEW: 'after-switch-view',
-			DIALOGUE_SELECTED: 'dialogue-selected'
-		};
-	}
-
-}(require('angular')));
-},{"angular":43}],6:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var mount = require('./../../utils/mount');
-
-	//
-	// Load third-party cache
-	// 
-	require('angular-cache/src');
-	//
-	// Load module components
-	//
-	var datetime = require('./datetime.flt');
-	var eventlist = require('./eventlist.srv');
-	var eventbus = require('./eventbus.srv');
-	var cache = require('./cache.srv');
-	
-	/**
-	 * @ngdoc module
-	 * @name app.core
-	 * @description
-	 *
-	 * # app.core
-	 *
-	 * The `app.core` module handles
-	 * the core parts of the app.
-	 */
-	ng.module('app.core', [
-		'angular-data.DSCacheFactory'
-	])
-	.config([
-		'DSCacheFactoryProvider',
-		function ($cache) {
-			$cache.setCacheDefaults({
-				cacheFlushInterval: 4500000,
-				deleteOnExpire: 'aggressive',
-				storageMode: 'localStorage'
-			});
-		}
-	])
-	.run(function () {
-		console.log( '`app.core` init' );
-	});
-
-	//
-	// Mount module components
-	// 
-	mount([datetime, eventlist, eventbus, cache]);
-
-}(require('angular')));
-},{"./../../utils/mount":21,"./cache.srv":2,"./datetime.flt":3,"./eventbus.srv":4,"./eventlist.srv":5,"angular":43,"angular-cache/src":41}],7:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-
-		ng.module('app.dialogues').controller(
-			'DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]
-		);
-		
-		/**
-		 * @ngdoc controller
-		 * @module app.dialogues
-		 * @name DialoguesCtrl
-		 */
-		function F ($scope, Cache, Dialogue) {
-			/**
-			 * Global cache for the dialogues module.
-			 * @type {Object}
-			 */
-			$scope.cache = Cache.create('app.dialogues');
-			/**
-			 * Holds the currently selected dialogue,
-			 * which is used to determine which dialogue
-			 * should be highlighted and not.
-			 * @type {Object}
-			 */
-			$scope.selectedDialogue = null;
-			/**
-			 * Determines if dialogue is selected or not.
-			 * @param  {Object} dialogue
-			 * @return {Boolean}
-			 */
-			$scope.isSelected = function (dialogue) {
-				return $scope.selectedDialogue === dialogue;
-			};
-			/**
-			 * Initialize function.
-			 */
-			function initialize () {
-				Dialogue.load().success(function (dialogues) {
-					$scope.dialogues = dialogues;
-				});
-			}
-			initialize();
-		}
-
-	};
-
-}(window.angular));
-},{}],8:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').controller(
-			'DialogueCtrl', ['$scope', 'Dialogue', 'EventBus', 'EventList', F]
-		);
-	};
-
-	/**
-	 * @ngdoc controller
-	 * @module app.dialogues
-	 * @name DialogueCtrl
-	 */
-	function F ($scope, Dialogue, EventBus, EventList) {
-		/**
-		 * Gets the dialogue synopsis from the model.
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
-		$scope.getSynopsis = function (dialogue) {
-			return Dialogue.getSynopsis(dialogue.messages);
-		};
-		/**
-		 * Gets the dialogue time from the model. 
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
-		$scope.getTime = function (dialogue) {
-			return Dialogue.getTime(dialogue.messages);
-		};
-		return ({ // exposed API
-			/**
-			 * Publishes the selected dialogue.
-			 * @param {Object} dialogue
-			 */
-			publishSelected: function (dialogue) {
-				EventBus.publish(EventList.DIALOGUE_SELECTED, dialogue);
-			},
-			/**
-			 * Sets the selected dialogue on the parent scope.
-			 * @param {Object} dialogue
-			 */
-			select: function (dialogue) {
-				$scope.$parent.selectedDialogue = dialogue;
-			}
-		});
-	}
-
-}(window.angular));
-},{}],9:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').directive(
-			'dialogue', ['$timeout', F]
-		);
-	};
-
-	/**
-	 * @ngdoc directive
-	 * @module app.dialogues
-	 * @name dialogue
-	 */
-	function F ($timeout) {
-		return {
-			restrict: 'CA',
-			controller: 'DialogueCtrl',
-			link: function (scope, element, attrs, ctrl) {
-				var dialogue = scope.dialogue;
-				element.bind('touchstart', function () {
-					$timeout(function () {
-						ctrl.select(dialogue);
-					}, 150);
-				});
-				element.bind('touchend', function () {
-					scope.$apply(function () {
-						ctrl.publishSelected(dialogue);
-					});
-				});
-			}
-		};
-	}
-
-}(window.angular));
-},{}],10:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').factory(
-			'Dialogue', ['$http', 'Cache', F]
-		);
-	};
-
-	/**
-	 * @ngdoc factory
-	 * @module app.dialogues
-	 * @name Dialogue
-	 */
-	function F ($http, Cache) {
-		var SYNOPSIS_MAX_LENGTH = 85;
-		function getLastMessage (messages) {
-			return messages[messages.length - 1];
-		}
-		return ({
-			load: function () {
-				return $http.get('dialogues.json', {
-					cache: Cache.get('app.dialogues')
-				});
-			},
-			getSynopsis: function (messages) {
-				var message = getLastMessage(messages).text;
-				var sub = message.substr(0, SYNOPSIS_MAX_LENGTH);
-				return sub.replace('<br><br>', '<br>...<br><br>');
-			},
-			getTime: function (messages) {
-				return getLastMessage(messages).timestamp;
-			}
-		});
-	}
-
-}(window.angular));
-},{}],11:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var mount = require('./../../../utils/mount');
-
-	//
-	// Load sub-module components
-	// 
-	var ctrl = require('./dialogue.ctrl');
-	var directive = require('./dialogue.dir');
-	var service = require('./dialogue.srv');
-
-	/**
-	 * @ngdoc module
-	 * @name app.dialogues.dialogue
-	 * @description
-	 *
-	 * # app.dialogues.dialogue
-	 *
-	 * The `app.dialogues.dialogue` module handles 
-	 * the dialogues dialogue item.
-	 */
-	ng.module('app.dialogues.dialogue', []);
-
-	//
-	// Mount sub-module components
-	// 
-	mount([ctrl, directive, service]);
-
-}(require('angular')));
-},{"./../../../utils/mount":21,"./dialogue.ctrl":8,"./dialogue.dir":9,"./dialogue.srv":10,"angular":43}],12:[function(require,module,exports){
-(function (root, ng) {
-
-	'use strict';
-
-	var mount = require('./../../utils/mount');
-
-	//
-	// Load sub-modules
-	// 
-	require('./dialogue');
-
-	/**
-	 * @ngdoc module
-	 * @name app.dialogues
-	 * @description
-	 *
-	 * # app.dialogues
-	 *
-	 * The `app.dialogues` module handles 
-	 * the dialogues view of the app.
-	 */
-	ng.module('app.dialogues', [
-		'app.dialogues.dialogue'		// Dialogue item sub-module
-	])
-	.run(function () {
-		console.log( '`app.dialogues` init' );
-	});
-
-	//
-	// Mount module main controller
-	// 
-	mount(require('./controller'));
-
-}(this, require('angular')));
-},{"./../../utils/mount":21,"./controller":7,"./dialogue":11,"angular":43}],13:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-
-		ng.module('app.messages').controller(
-			'MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]
-		);
-		
-		/**
-		 * @ngdoc controller
-		 * @module app.messages
-		 * @name MessagesCtrl
-		 */
-		function F ($scope, EventBus, EventList) {
-			/**
-			 * Holds the currently selected message,
-			 * which is used to determine which message
-			 * should be highlighted and not.
-			 * @type {Object}
-			 */
-			$scope.selectedMessage = null;
-			/**
-			 * Determines if message is selected or not.
-			 * @param  {Object} message
-			 * @return {Boolean}
-			 */
-			$scope.isSelected = function (message) {
-				return $scope.selectedMessage === message;
-			};
-			/**
-			 * Decides whether to show the time or not
-			 * by calculating the difference between the 
-			 * current message's time and the previous
-			 * message's time. If the delta is less than
-			 * 10 minutes, the time should be hidden.
-			 * @return {Function}
-			 */
-			$scope.isHiddenTime = (function () {
-				var previous = 0; // previous time
-				/**
-				 * @param  {Integer} timestamp
-				 * @param  {Integer} index
-				 * @return {Boolean}
-				 */
-				return function (timestamp, index) {
-					previous = index ? previous : 0;
-					var d = timestamp - previous; // delta
-					previous = timestamp; // save for next
-					return d < 600000; // < 10 minutes
-				};
-			}());
-			/**
-			 * Initialize function.
-			 */
-			function initialize () {
-				EventBus.subscribe(
-					EventList.DIALOGUE_SELECTED,
-					function (e, dialogue) {
-						$scope.selectedMessage = null;
-						$scope.dialogue = dialogue;
-					},
-					$scope
-				);
-			}
-			initialize();
-		}
-
-	};
-
-}(window.angular));
-},{}],14:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.messages.copy').controller(
-			'MessageCopyCtrl', ['$scope', F]
-		);
-	};
-
-	/**
-	 * @ngdoc controller
-	 * @module app.messages.copy
-	 * @name MessageCopyCtrl
-	 */
-	function F ($scope) {
-		/**
-		 * Holds the position for the copy button.
-		 * @type {Object}
-		 */
-		$scope.copyPos = { left: 0, top: 0 };
-		return ({ // Exposed API
-			/**
-			 * Sets the visibility of the copy button.
-			 * @param {Boolean} flag
-			 */
-			setCopyVisibility: function (flag) {
-				$scope.isCopyVisible = flag;
-			},
-			/**
-			 * Calculates and sets the position of the copy button.
-			 * @param {Object} pos An object with `top` and `left`.
-			 * @param {Integer} width Width of the message, in px.
-			 */
-			setCopyPosition: function (pos, width) {
-				var message = $scope.selectedMessage;
-				var offset = message.type === 'in' ? 8 : -8;
-				var left = pos.left + width / 2 - 45;
-				$scope.copyPos = {
-					left: left + offset,
-					top: pos.top - 210
-				};
-			}
-		});
-	}
-
-}(window.angular));
-},{}],15:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.messages.copy').directive(
-			'messageCopy', ['$timeout', F]
-		);
-	};
-
-	/**
-	 * @ngdoc directive
-	 * @module app.messages.copy
-	 * @name messageCopy
-	 */
-	function F ($timeout) {
-		return ({
-			restrict: 'CA',
-			controller: 'MessageCopyCtrl',
-			link: function (scope, element, attrs, ctrl) {
-				element.bind('touchstart', function (e) {
-					element.addClass('is-active');
-				});
-				element.bind('touchend', function () {
-					$timeout(function () { // slight delay
-						element.removeClass('is-active');
-						scope.selectedMessage = null;
-					}, 200);
-				});
-				scope.$watch('selectedMessage', function (val) {
-					ctrl.setCopyVisibility(val ? true : false);
-				});
-				scope.$watch('copySettings', function (obj, obj2) {
-					if ( ! ng.equals(obj, obj2)) { // post-init only
-						ctrl.setCopyPosition(obj.pos, obj.width);
-					}
-				});
-				scope.$on('$destroy', function () {
-					element.unbind('touchstart');
-					element.unbind('touchend');
-				});
-			}
-		});
-	}
-
-}(window.angular));
-},{}],16:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var mount = require('./../../../utils/mount');
-
-	//
-	// Load sub-module components
-	// 
-	var ctrl = require('./copy.ctrl');
-	var directive = require('./copy.dir');
-	
-	/**
-	 * @ngdoc module
-	 * @name app.messages.copy
-	 * @description
-	 *
-	 * # app.messages.copy
-	 *
-	 * The `app.messages.copy` module handles 
-	 * the messages copy button.
-	 */
-	ng.module('app.messages.copy', []);
-
-	//
-	// Mount sub-module components
-	// 
-	mount([ctrl, directive]);
-
-}(require('angular')));
-},{"./../../../utils/mount":21,"./copy.ctrl":14,"./copy.dir":15,"angular":43}],17:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var mount = require('./../../utils/mount');
-
-	//
-	// Load sub-modules
-	// 
-	require('./message');
-	require('./copy');
-
-	/**
-	 * @ngdoc module
-	 * @name app.messages
-	 * @description
-	 *
-	 * # app.messages
-	 *
-	 * The `app.messages` module handles
-	 * the messages view of the app.
-	 */
-	ng.module('app.messages', [
-		'app.messages.message',		// Message item sub-module
-		'app.messages.copy'				// Message copy button sub-module
-	])
-	.run(function () {
-		console.log( '`app.messages` init' );
-	});
-
-	//
-	// Mount module main controller
-	// 
-	mount(require('./controller'));
-
-}(require('angular')));
-},{"./../../utils/mount":21,"./controller":13,"./copy":16,"./message":18,"angular":43}],18:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var mount = require('./../../../utils/mount');
-
-	//
-	// Load sub-module components
-	// 
-	var ctrl = require('./message.ctrl');
-	var directive = require('./message.dir');
-	
-	/**
-	 * @ngdoc module
-	 * @name app.dialogues.dialogue
-	 * @description
-	 *
-	 * # app.dialogues.dialogue
-	 *
-	 * The `app.dialogues.dialogue` module handles 
-	 * the dialogues dialogue item.
-	 */
-	ng.module('app.messages.message', []);
-
-	//
-	// Mount sub-module components
-	// 
-	mount([ctrl, directive]);
-
-}(require('angular')));
-},{"./../../../utils/mount":21,"./message.ctrl":19,"./message.dir":20,"angular":43}],19:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	module.exports = function () {
-		ng.module('app.messages.message').controller(
-			'MessageCtrl', ['$scope', F]
-		);
-	};
-
-	/**
-	 * @ngdoc controller
-	 * @module app.messages
-	 * @name MessageCtrl
-	 */
-	function F ($scope) {
-		$scope.getSelectedClass = function (message) {
-			return $scope.isSelected(message) && 'is-selected';
-		};
-		$scope.getTypeClass = function (message) {
-			return 'message--' + message.type;
-		};
-		return ({ // exposed API
-			select: function (message) {
-				$scope.$parent.selectedMessage = message;
-			},
-			setCopyButtonSettings: function (settings) {
-				$scope.$parent.copySettings = settings;
-			}
-		});
-	}
-
-}(window.angular));
-},{}],20:[function(require,module,exports){
-(function (ng) {
-
-	'use strict';
-
-	var $ = require('jquery');
-
-	module.exports = function () {
-		ng.module('app.messages.message').directive(
-			'message', ['$timeout', F]
-		);
-	};
-
-	/**
-	 * @ngdoc directive
-	 * @module app.messages
-	 * @name message
-	 */
-	function F ($timeout) {
-		return ({
-			restrict: 'CA',
-			controller: 'MessageCtrl',
-			link: function (scope, element, attrs, ctrl) {
-				element.bind('touchstart', function () {
-					this._timer = $timeout(function () {
-						ctrl.setCopyButtonSettings({
-							width: $(element).outerWidth(),
-							pos: $(element).offset()
-						});
-						ctrl.select(scope.message);
-					}, 300);
-				});
-				element.bind('touchend', function () {
-					$timeout.cancel(this._timer);
-				});
-				scope.$on('$destroy', function () {
-					element.unbind('touchstart');
-					element.unbind('touchend');
-				});
-			}
-		});
-	}
-
-}(window.angular));
-},{"jquery":45}],21:[function(require,module,exports){
-'use strict';
-
-module.exports = function (comps) {
-	if ( ! Array.isArray(comps)) {
-		comps = [comps];
-	}
-	for (var i in comps) {
-		if (comps.hasOwnProperty(i)) {
-			comps[i]();
-		}
-	}
-};
-},{}],22:[function(require,module,exports){
 /**
  * @method bubbleUp
  * @param {array} heap The heap.
@@ -999,7 +178,7 @@ module.exports = {
   DSBinaryHeap: DSBinaryHeap
 };
 
-},{}],23:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:destroy
@@ -1037,7 +216,7 @@ module.exports = function destroy() {
   this.$$prefix = null;
 };
 
-},{}],24:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1222,7 +401,7 @@ module.exports = function get(key, options) {
   return value;
 };
 
-},{"../utils":42}],25:[function(require,module,exports){
+},{"../utils":21}],4:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSBinaryHeap = require('../DSBinaryHeap').DSBinaryHeap;
 
@@ -1664,7 +843,7 @@ DSCache.prototype.touch = function (key) {
 
 module.exports = DSCache;
 
-},{"../DSBinaryHeap":22,"../defaults":40,"./destroy":23,"./get":24,"./info":26,"./keySet":27,"./keys":28,"./put":29,"./remove":30,"./removeAll":31,"./removeExpired":32,"./setCacheFlushInterval":33,"./setCapacity":34,"./setDeleteOnExpire":35,"./setMaxAge":36,"./setOnExpire":37,"./setRecycleFreq":38}],26:[function(require,module,exports){
+},{"../DSBinaryHeap":1,"../defaults":19,"./destroy":2,"./get":3,"./info":5,"./keySet":6,"./keys":7,"./put":8,"./remove":9,"./removeAll":10,"./removeExpired":11,"./setCacheFlushInterval":12,"./setCapacity":13,"./setDeleteOnExpire":14,"./setMaxAge":15,"./setOnExpire":16,"./setRecycleFreq":17}],5:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:info
@@ -1742,7 +921,7 @@ module.exports = function info(key) {
   }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1787,7 +966,7 @@ module.exports = function keySet() {
   }
 };
 
-},{"../utils":42}],28:[function(require,module,exports){
+},{"../utils":21}],7:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1828,7 +1007,7 @@ module.exports = function keys() {
   }
 };
 
-},{"../utils":42}],29:[function(require,module,exports){
+},{"../utils":21}],8:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -1948,7 +1127,7 @@ module.exports = function put(key, value) {
   return value;
 };
 
-},{"../utils":42}],30:[function(require,module,exports){
+},{"../utils":21}],9:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:remove
@@ -2012,7 +1191,7 @@ module.exports = function remove(key) {
   }
 };
 
-},{}],31:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:removeAll
@@ -2067,7 +1246,7 @@ module.exports = function removeAll() {
   }
 };
 
-},{}],32:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:removeExpired
@@ -2144,7 +1323,7 @@ module.exports = function removeExpired() {
   return expired;
 };
 
-},{}],33:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setCacheFlushInterval
@@ -2197,7 +1376,7 @@ module.exports = function setCacheFlushInterval(cacheFlushInterval) {
   }
 };
 
-},{}],34:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setCapacity
@@ -2254,7 +1433,7 @@ module.exports = function setCapacity(capacity) {
   return removed;
 };
 
-},{}],35:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setDeleteOnExpire
@@ -2310,7 +1489,7 @@ module.exports = function setDeleteOnExpire(deleteOnExpire) {
   this.setRecycleFreq(this.$$recycleFreq);
 };
 
-},{}],36:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var utils = require('../utils');
 
 /**
@@ -2408,7 +1587,7 @@ module.exports = function setMaxAge(maxAge) {
   }
 };
 
-},{"../utils":42}],37:[function(require,module,exports){
+},{"../utils":21}],16:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setOnExpire
@@ -2455,7 +1634,7 @@ module.exports = function setOnExpire(onExpire) {
   }
 };
 
-},{}],38:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /**
  * @doc method
  * @id DSCache.methods:setRecycleFreq
@@ -2526,7 +1705,7 @@ module.exports = function setRecycleFreq(recycleFreq) {
   }
 };
 
-},{}],39:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var defaults = require('../defaults'),
   DSCache = require('../DSCache'),
   version = '<%= pkg.version %>';
@@ -2851,7 +2030,7 @@ function DSCacheFactoryProvider() {
 
 module.exports = DSCacheFactoryProvider;
 
-},{"../DSCache":25,"../defaults":40}],40:[function(require,module,exports){
+},{"../DSCache":4,"../defaults":19}],19:[function(require,module,exports){
 var defaults = {
   /**
    * @doc overview
@@ -3086,7 +2265,7 @@ module.exports = {
   defaults: defaults
 };
 
-},{}],41:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function (window, angular, undefined) {
   'use strict';
 
@@ -3189,7 +2368,7 @@ module.exports = {
 
 })(window, window.angular);
 
-},{"./DSBinaryHeap":22,"./DSCacheFactory":39}],42:[function(require,module,exports){
+},{"./DSBinaryHeap":1,"./DSCacheFactory":18}],21:[function(require,module,exports){
 module.exports = {
   /*!
    * Stringify a number.
@@ -3228,12 +2407,12 @@ module.exports = {
   }
 };
 
-},{}],43:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 require('./lib/angular.js');
 
 module.exports = angular;
 
-},{"./lib/angular.js":44}],44:[function(require,module,exports){
+},{"./lib/angular.js":23}],23:[function(require,module,exports){
 /**
  * @license AngularJS v1.2.21
  * (c) 2010-2014 Google, Inc. http://angularjs.org
@@ -25117,7 +24296,7 @@ var styleDirective = valueFn({
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide{display:none !important;}ng\\:form{display:block;}.ng-animate-block-transitions{transition:0s all!important;-webkit-transition:0s all!important;}.ng-hide-add-active,.ng-hide-remove{display:block!important;}</style>');
-},{}],45:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.1
  * http://jquery.com/
@@ -34309,7 +33488,7 @@ return jQuery;
 
 }));
 
-},{}],46:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (global){
 //! moment.js
 //! version : 2.8.1
@@ -37121,4 +36300,821 @@ return jQuery;
 }).call(this);
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[1]);
+},{}],26:[function(require,module,exports){
+(function (root, ng) {
+
+	'use strict';
+
+	//
+	// Load main app modules
+	// 
+	require('./modules/core');
+	require('./modules/dialogues');
+	require('./modules/messages');
+
+	/**
+	 * @ngdoc module
+	 * @name app
+	 * @description
+	 *
+	 * # app (core module)
+	 * 
+	 * The `app` module is the module being
+	 * loaded by the page and requires all
+	 * other neccessary app modules.
+	 */
+	ng.module('app', [
+		'app.core',
+		'app.dialogues',
+		'app.messages'
+	])
+	.run(function () {
+		console.log( '`app` init' );
+	});
+
+}(this, require('angular')));
+},{"./modules/core":31,"./modules/dialogues":37,"./modules/messages":42,"angular":22}],27:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.core').factory(
+			'Cache', ['DSCacheFactory', F]
+		);
+	};
+
+	/**
+	 * @ngdoc factory
+	 * @module app.core
+	 * @name Cache
+	 */
+	function F (DSCacheFactory) {
+		return ng.extend(DSCacheFactory, {
+			create: function (/*args...*/) {
+				return this.apply(this, arguments);
+			}
+		});
+	}
+
+}(require('angular')));
+},{"angular":22}],28:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var moment = require('moment');
+
+	module.exports = function () {
+		ng.module('app.core').filter('datetime', F);
+	};
+
+	/**
+	 * @ngdoc filter
+	 * @module app.core
+	 * @name datetime
+	 */
+	function F () {
+		var weekdays = [
+			's\xf6ndag', 'm\xe5ndag', 'tisdag', 'onsdag',
+			'torsdag', 'fredag', 'l\xf6rdag'
+		];
+		return function (timestamp, format) {
+			var time = moment(timestamp);
+			if (format === 'long') {
+				return time.format('D MMM YYYY HH:mm');
+			} else if (format === 'short') {
+				var diff = moment().diff(time, 'days');
+				if (diff >= 8) { // 1 week+
+					return time.format('YYYY-MM-DD');
+				} else if (diff > 1 && diff <= 7) { // within a week, excl. yesterday
+					return weekdays[time.day()];
+				} else if (diff === 0) { // today
+					return time.format('HH:mm');
+				} else if (diff === 1) {
+					return 'igår'; // yesterday
+				}
+			}
+		};
+	}
+
+}(require('angular')));
+},{"angular":22,"moment":25}],29:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.core').factory(
+			'EventBus', ['$rootScope', 'EventList', F]
+		);
+	};
+
+	/**
+	 * @ngdoc factory
+	 * @module app.core
+	 * @name EventBus
+	 */
+	function F ($rootScope, EventList) {
+		var isSupportedEvent = (
+			function () {
+				var events = [];
+				for (var i in EventList) {
+					events.push(EventList[i]);
+				}
+				return function (name) {
+					return !!~events.indexOf(name);
+				};
+			}
+		());
+		return ({
+			subscribe: function (name, handler, scope) {
+				if ( ! isSupportedEvent(name)) { // not allowed
+					throw 'EventBus.subscribe(): Event `' + name + '` not supported';
+				}
+				(scope || $rootScope).$on(name, handler);
+			},
+			publish: function (name/*, args...*/) {
+				if ( ! isSupportedEvent(name)) { // not allowed
+					throw 'EventBus.publish(): Event `' + name + '` not supported.';
+				}
+				$rootScope.$broadcast.apply($rootScope, arguments);
+				// console.log( 'EventBus.publish(): `%s`', name );
+			}
+		});
+	}
+
+}(require('angular')));
+
+},{"angular":22}],30:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.core').factory('EventList', F);
+	};
+
+	function F () {
+		return {
+			SWITCH_VIEW: 'switch-view',
+			BEFORE_SWITCH_VIEW: 'before-switch-view',
+			AFTER_SWITCH_VIEW: 'after-switch-view',
+			DIALOGUE_SELECTED: 'dialogue-selected'
+		};
+	}
+
+}(require('angular')));
+},{"angular":22}],31:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var mount = require('./../../utils/mount');
+
+	//
+	// Load third-party cache
+	// 
+	require('angular-cache/src');
+	//
+	// Load module components
+	//
+	var datetime = require('./datetime.flt');
+	var eventlist = require('./eventlist.srv');
+	var eventbus = require('./eventbus.srv');
+	var cache = require('./cache.srv');
+	
+	/**
+	 * @ngdoc module
+	 * @name app.core
+	 * @description
+	 *
+	 * # app.core
+	 *
+	 * The `app.core` module handles
+	 * the core parts of the app.
+	 */
+	ng.module('app.core', [
+		'angular-data.DSCacheFactory'
+	])
+	.config([
+		'DSCacheFactoryProvider',
+		function ($cache) {
+			$cache.setCacheDefaults({
+				cacheFlushInterval: 4500000,
+				deleteOnExpire: 'aggressive',
+				storageMode: 'localStorage'
+			});
+		}
+	])
+	.run(function () {
+		console.log( '`app.core` init' );
+	});
+
+	//
+	// Mount module components
+	// 
+	mount([datetime, eventlist, eventbus, cache]);
+
+}(require('angular')));
+},{"./../../utils/mount":46,"./cache.srv":27,"./datetime.flt":28,"./eventbus.srv":29,"./eventlist.srv":30,"angular":22,"angular-cache/src":20}],32:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.dialogues').controller(
+			'DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]
+		);
+	};
+
+	/**
+	 * @ngdoc controller
+	 * @module app.dialogues
+	 * @name DialoguesCtrl
+	 */
+	function F ($scope, Cache, Dialogue) {
+		/**
+		 * Global cache for the dialogues module.
+		 * @type {Object}
+		 */
+		$scope.cache = Cache.create('app.dialogues');
+		/**
+		 * Holds the currently selected dialogue,
+		 * which is used to determine which dialogue
+		 * should be highlighted and not.
+		 * @type {Object}
+		 */
+		$scope.selectedDialogue = null;
+		/**
+		 * Determines if dialogue is selected or not.
+		 * @param  {Object} dialogue
+		 * @return {Boolean}
+		 */
+		$scope.isSelected = function (dialogue) {
+			return $scope.selectedDialogue === dialogue;
+		};
+		/**
+		 * Initialize function.
+		 */
+		function initialize () {
+			Dialogue.load().success(function (dialogues) {
+				$scope.dialogues = dialogues;
+			});
+		}
+		initialize();
+	}
+
+}(window.angular));
+},{}],33:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.dialogues.dialogue').controller(
+			'DialogueCtrl', ['$scope', 'Dialogue', 'EventBus', 'EventList', F]
+		);
+	};
+
+	/**
+	 * @ngdoc controller
+	 * @module app.dialogues
+	 * @name DialogueCtrl
+	 */
+	function F ($scope, Dialogue, EventBus, EventList) {
+		/**
+		 * Gets the dialogue synopsis from the model.
+		 * @param  {Object} dialogue
+		 * @return {String}
+		 */
+		$scope.getSynopsis = function (dialogue) {
+			return Dialogue.getSynopsis(dialogue.messages);
+		};
+		/**
+		 * Gets the dialogue time from the model. 
+		 * @param  {Object} dialogue
+		 * @return {String}
+		 */
+		$scope.getTime = function (dialogue) {
+			return Dialogue.getTime(dialogue.messages);
+		};
+		return ({ // exposed API
+			/**
+			 * Publishes the selected dialogue.
+			 * @param {Object} dialogue
+			 */
+			publishSelected: function (dialogue) {
+				EventBus.publish(EventList.DIALOGUE_SELECTED, dialogue);
+			},
+			/**
+			 * Sets the selected dialogue on the parent scope.
+			 * @param {Object} dialogue
+			 */
+			select: function (dialogue) {
+				$scope.$parent.selectedDialogue = dialogue;
+			}
+		});
+	}
+
+}(window.angular));
+},{}],34:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.dialogues.dialogue').directive(
+			'dialogue', ['$timeout', F]
+		);
+	};
+
+	/**
+	 * @ngdoc directive
+	 * @module app.dialogues
+	 * @name dialogue
+	 */
+	function F ($timeout) {
+		return {
+			restrict: 'CA',
+			controller: 'DialogueCtrl',
+			link: function (scope, element, attrs, ctrl) {
+				var dialogue = scope.dialogue;
+				element.bind('touchstart', function () {
+					$timeout(function () {
+						ctrl.select(dialogue);
+					}, 150);
+				});
+				element.bind('touchend', function () {
+					scope.$apply(function () {
+						ctrl.publishSelected(dialogue);
+					});
+				});
+			}
+		};
+	}
+
+}(window.angular));
+},{}],35:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.dialogues.dialogue').factory(
+			'Dialogue', ['$http', 'Cache', F]
+		);
+	};
+
+	/**
+	 * @ngdoc factory
+	 * @module app.dialogues
+	 * @name Dialogue
+	 */
+	function F ($http, Cache) {
+		var SYNOPSIS_MAX_LENGTH = 85;
+		function getLastMessage (messages) {
+			return messages[messages.length - 1];
+		}
+		return ({
+			load: function () {
+				return $http.get('dialogues.json', {
+					cache: Cache.get('app.dialogues')
+				});
+			},
+			getSynopsis: function (messages) {
+				var message = getLastMessage(messages).text;
+				var sub = message.substr(0, SYNOPSIS_MAX_LENGTH);
+				return sub.replace('<br><br>', '<br>...<br><br>');
+			},
+			getTime: function (messages) {
+				return getLastMessage(messages).timestamp;
+			}
+		});
+	}
+
+}(window.angular));
+},{}],36:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var mount = require('./../../../utils/mount');
+
+	//
+	// Load sub-module components
+	// 
+	var ctrl = require('./dialogue.ctrl');
+	var directive = require('./dialogue.dir');
+	var service = require('./dialogue.srv');
+
+	/**
+	 * @ngdoc module
+	 * @name app.dialogues.dialogue
+	 * @description
+	 *
+	 * # app.dialogues.dialogue
+	 *
+	 * The `app.dialogues.dialogue` module handles 
+	 * the dialogues dialogue item.
+	 */
+	ng.module('app.dialogues.dialogue', []);
+
+	//
+	// Mount sub-module components
+	// 
+	mount([ctrl, directive, service]);
+
+}(require('angular')));
+},{"./../../../utils/mount":46,"./dialogue.ctrl":33,"./dialogue.dir":34,"./dialogue.srv":35,"angular":22}],37:[function(require,module,exports){
+(function (root, ng) {
+
+	'use strict';
+
+	var mount = require('./../../utils/mount');
+
+	//
+	// Load sub-modules
+	// 
+	require('./dialogue');
+
+	/**
+	 * @ngdoc module
+	 * @name app.dialogues
+	 * @description
+	 *
+	 * # app.dialogues
+	 *
+	 * The `app.dialogues` module handles 
+	 * the dialogues view of the app.
+	 */
+	ng.module('app.dialogues', [
+		'app.dialogues.dialogue'    // Dialogue item sub-module
+	])
+	.run(function () {
+		console.log( '`app.dialogues` init' );
+	});
+
+	//
+	// Mount module main controller
+	// 
+	mount(require('./controller'));
+
+}(this, require('angular')));
+},{"./../../utils/mount":46,"./controller":32,"./dialogue":36,"angular":22}],38:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.messages').controller(
+			'MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]
+		);
+	};
+
+	/**
+	 * @ngdoc controller
+	 * @module app.messages
+	 * @name MessagesCtrl
+	 */
+	function F ($scope, EventBus, EventList) {
+		/**
+		 * Holds the currently selected message,
+		 * which is used to determine which message
+		 * should be highlighted and not.
+		 * @type {Object}
+		 */
+		$scope.selectedMessage = null;
+		/**
+		 * Determines if message is selected or not.
+		 * @param  {Object} message
+		 * @return {Boolean}
+		 */
+		$scope.isSelected = function (message) {
+			return $scope.selectedMessage === message;
+		};
+		/**
+		 * Decides whether to show the time or not
+		 * by calculating the difference between the 
+		 * current message's time and the previous
+		 * message's time. If the delta is less than
+		 * 10 minutes, the time should be hidden.
+		 * @return {Function}
+		 */
+		$scope.isHiddenTime = (function () {
+			var previous = 0; // previous time
+			/**
+			 * @param  {Integer} timestamp
+			 * @param  {Integer} index
+			 * @return {Boolean}
+			 */
+			return function (timestamp, index) {
+				previous = index ? previous : 0;
+				var d = timestamp - previous; // delta
+				previous = timestamp; // save for next
+				return d < 600000; // < 10 minutes
+			};
+		}());
+		/**
+		 * Initialize function.
+		 */
+		function initialize () {
+			EventBus.subscribe(
+				EventList.DIALOGUE_SELECTED,
+				function (e, dialogue) {
+					$scope.selectedMessage = null;
+					$scope.dialogue = dialogue;
+				},
+				$scope
+			);
+		}
+		initialize();
+	}
+
+}(window.angular));
+},{}],39:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.messages.copy').controller(
+			'MessageCopyCtrl', ['$scope', F]
+		);
+	};
+
+	/**
+	 * @ngdoc controller
+	 * @module app.messages.copy
+	 * @name MessageCopyCtrl
+	 */
+	function F ($scope) {
+		/**
+		 * Holds the position for the copy button.
+		 * @type {Object}
+		 */
+		$scope.copyPos = { left: 0, top: 0 };
+		return ({ // Exposed API
+			/**
+			 * Sets the visibility of the copy button.
+			 * @param {Boolean} flag
+			 */
+			setCopyVisibility: function (flag) {
+				$scope.isCopyVisible = flag;
+			},
+			/**
+			 * Calculates and sets the position of the copy button.
+			 * @param {Object} pos An object with `top` and `left`.
+			 * @param {Integer} width Width of the message, in px.
+			 */
+			setCopyPosition: function (pos, width) {
+				var message = $scope.selectedMessage;
+				var offset = message.type === 'in' ? 8 : -8;
+				var left = pos.left + width / 2 - 45;
+				$scope.copyPos = {
+					left: left + offset,
+					top: pos.top - 210
+				};
+			}
+		});
+	}
+
+}(window.angular));
+},{}],40:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.messages.copy').directive(
+			'messageCopy', ['$timeout', F]
+		);
+	};
+
+	/**
+	 * @ngdoc directive
+	 * @module app.messages.copy
+	 * @name messageCopy
+	 */
+	function F ($timeout) {
+		return ({
+			restrict: 'CA',
+			controller: 'MessageCopyCtrl',
+			link: function (scope, element, attrs, ctrl) {
+				element.bind('touchstart', function (e) {
+					element.addClass('is-active');
+				});
+				element.bind('touchend', function () {
+					$timeout(function () { // slight delay
+						element.removeClass('is-active');
+						scope.selectedMessage = null;
+					}, 200);
+				});
+				scope.$watch('selectedMessage', function (val) {
+					ctrl.setCopyVisibility(val ? true : false);
+				});
+				scope.$watch('copySettings', function (obj, obj2) {
+					if ( ! ng.equals(obj, obj2)) { // post-init only
+						ctrl.setCopyPosition(obj.pos, obj.width);
+					}
+				});
+				scope.$on('$destroy', function () {
+					element.unbind('touchstart');
+					element.unbind('touchend');
+				});
+			}
+		});
+	}
+
+}(window.angular));
+},{}],41:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var mount = require('./../../../utils/mount');
+
+	//
+	// Load sub-module components
+	// 
+	var ctrl = require('./copy.ctrl');
+	var directive = require('./copy.dir');
+	
+	/**
+	 * @ngdoc module
+	 * @name app.messages.copy
+	 * @description
+	 *
+	 * # app.messages.copy
+	 *
+	 * The `app.messages.copy` module handles 
+	 * the messages copy button.
+	 */
+	ng.module('app.messages.copy', []);
+
+	//
+	// Mount sub-module components
+	// 
+	mount([ctrl, directive]);
+
+}(require('angular')));
+},{"./../../../utils/mount":46,"./copy.ctrl":39,"./copy.dir":40,"angular":22}],42:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var mount = require('./../../utils/mount');
+
+	//
+	// Load sub-modules
+	// 
+	require('./message');
+	require('./copy');
+
+	/**
+	 * @ngdoc module
+	 * @name app.messages
+	 * @description
+	 *
+	 * # app.messages
+	 *
+	 * The `app.messages` module handles
+	 * the messages view of the app.
+	 */
+	ng.module('app.messages', [
+		'app.messages.message',    // Message item sub-module
+		'app.messages.copy'        // Message copy button sub-module
+	])
+	.run(function () {
+		console.log( '`app.messages` init' );
+	});
+
+	//
+	// Mount module main controller
+	// 
+	mount(require('./controller'));
+
+}(require('angular')));
+},{"./../../utils/mount":46,"./controller":38,"./copy":41,"./message":43,"angular":22}],43:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var mount = require('./../../../utils/mount');
+
+	//
+	// Load sub-module components
+	// 
+	var ctrl = require('./message.ctrl');
+	var directive = require('./message.dir');
+	
+	/**
+	 * @ngdoc module
+	 * @name app.dialogues.dialogue
+	 * @description
+	 *
+	 * # app.dialogues.dialogue
+	 *
+	 * The `app.dialogues.dialogue` module handles 
+	 * the dialogues dialogue item.
+	 */
+	ng.module('app.messages.message', []);
+
+	//
+	// Mount sub-module components
+	// 
+	mount([ctrl, directive]);
+
+}(require('angular')));
+},{"./../../../utils/mount":46,"./message.ctrl":44,"./message.dir":45,"angular":22}],44:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	module.exports = function () {
+		ng.module('app.messages.message').controller(
+			'MessageCtrl', ['$scope', F]
+		);
+	};
+
+	/**
+	 * @ngdoc controller
+	 * @module app.messages
+	 * @name MessageCtrl
+	 */
+	function F ($scope) {
+		$scope.getSelectedClass = function (message) {
+			return $scope.isSelected(message) && 'is-selected';
+		};
+		$scope.getTypeClass = function (message) {
+			return 'message--' + message.type;
+		};
+		return ({ // exposed API
+			select: function (message) {
+				$scope.$parent.selectedMessage = message;
+			},
+			setCopyButtonSettings: function (settings) {
+				$scope.$parent.copySettings = settings;
+			}
+		});
+	}
+
+}(window.angular));
+},{}],45:[function(require,module,exports){
+(function (ng) {
+
+	'use strict';
+
+	var $ = require('jquery');
+
+	module.exports = function () {
+		ng.module('app.messages.message').directive(
+			'message', ['$timeout', F]
+		);
+	};
+
+	/**
+	 * @ngdoc directive
+	 * @module app.messages
+	 * @name message
+	 */
+	function F ($timeout) {
+		return ({
+			restrict: 'CA',
+			controller: 'MessageCtrl',
+			link: function (scope, element, attrs, ctrl) {
+				element.bind('touchstart', function () {
+					this._timer = $timeout(function () {
+						ctrl.setCopyButtonSettings({
+							width: $(element).outerWidth(),
+							pos: $(element).offset()
+						});
+						ctrl.select(scope.message);
+					}, 300);
+				});
+				element.bind('touchend', function () {
+					$timeout.cancel(this._timer);
+				});
+				scope.$on('$destroy', function () {
+					element.unbind('touchstart');
+					element.unbind('touchend');
+				});
+			}
+		});
+	}
+
+}(window.angular));
+},{"jquery":24}],46:[function(require,module,exports){
+'use strict';
+
+module.exports = function (comps) {
+	if ( ! Array.isArray(comps)) {
+		comps = [comps];
+	}
+	for (var i in comps) {
+		if (comps.hasOwnProperty(i)) {
+			comps[i]();
+		}
+	}
+};
+},{}]},{},[26]);

@@ -20,12 +20,13 @@
     "grunt-browserify": "~2.1.4",
     "grunt-contrib-uglify": "~0.5.1",
     "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-sass": "~0.8.1",
     "browserify": "~5.10.1",
     "aliasify": "~1.4.0"
   },
   "aliasify": {
     "aliases": {
-      "utils": "./assets/js/app/utils"
+      "utils": "./src/js/utils"
     }
   }
 }
