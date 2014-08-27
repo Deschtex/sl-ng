@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Meddelanden</title>
+
+	<meta charset="utf-8">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="initial-scale=0.5, maximum-scale=1, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<link rel="stylesheet" href="assets/css/app.css">
+
+</head>
+
+<body>
+
+	<div class="app" ng-app="app">
+		<div class="app__views">
+			<section 
+				class="view view--dialogues"
+				ng-controller="DialoguesCtrl">
+				<h2>Dialogues</h2>
+				<div class="view__content">
+					<div class="dialogues-search-bar"></div>
+					<div class="dialogues">
+						<div 
+							class="dialogue" 
+							ng-repeat="dialogue in dialogues"
+							ng-class="{ 'is-selected': isSelected(dialogue) }">
+							<span class="dialogue__name">{{dialogue.name}}</span>
+							<span class="dialogue__synopsis">{{getSynopsis(dialogue)}}</span>
+							<time class="dialogue__time">{{getTime(dialogue) | datetime:'short'}}</time>
+							<i class="dialogue__arrow"></i>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section 
+				class="view view--messages"
+				ng-controller="MessagesCtrl">
+				<h2>Messages</h2>
+				<div class="view__content">
+					<div class="messages" ng-show="dialogue">
+						<div 
+							class="message" 
+							ng-repeat="message in dialogue.messages"
+							ng-class="[getSelectedClass(message), getTypeClass(message)]">
+							<time class="message__time" ng-hide="isHiddenTime(message.timestamp, $index)">{{message.timestamp | datetime:'long'}}</time>
+							<span class="message__text">{{message.text}}</span>
+						</div>
+					</div>
+					<div class="message-copy" data-text="Kopiera" ng-show="isCopyVisible" ng-style="{ left: copyPos.left + 'px', top: copyPos.top + 'px' }"></div>
+					<div class="message-compose-bar"></div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<script src="assets/js/app.js"></script>
+
+</body>
+
+</html>

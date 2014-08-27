@@ -1,0 +1,34 @@
+(function (root, ng) {
+
+	'use strict';
+
+	var mount = require('utils/mount');
+
+	//
+	// Load sub-modules
+	// 
+	require('./dialogue');
+
+	/**
+	 * @ngdoc module
+	 * @name app.dialogues
+	 * @description
+	 *
+	 * # app.dialogues
+	 *
+	 * The `app.dialogues` module handles 
+	 * the dialogues view of the app.
+	 */
+	ng.module('app.dialogues', [
+		'app.dialogues.dialogue'		// Dialogue item sub-module
+	])
+	.run(function () {
+		console.log( '`app.dialogues` init' );
+	});
+
+	//
+	// Mount module main controller
+	// 
+	mount(require('./controller'));
+
+}(this, require('angular')));

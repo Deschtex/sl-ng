@@ -1,0 +1,31 @@
+{
+  "name": "sl-ticket-app",
+  "description": "SL Ticket Generator (Angular.js)",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.2.21",
+    "angular-cache": "~3.0.3",
+    "moment": "~2.8.1",
+    "jquery": "~2.1.1"
+  },
+  "devDependencies": {
+    "karma": "~0.12.16",
+    "karma-chrome-launcher": "~0.1.4",
+    "mocha": "~1.20.1",
+    "karma-mocha": "~0.1.4",
+    "karma-expect": "~1.1.0",
+    "angular-mocks": "~1.2.22",
+    "grunt": "~0.4.5",
+    "grunt-browserify": "~2.1.4",
+    "grunt-contrib-uglify": "~0.5.1",
+    "grunt-contrib-watch": "~0.6.1",
+    "browserify": "~5.10.1",
+    "aliasify": "~1.4.0"
+  },
+  "aliasify": {
+    "aliases": {
+      "utils": "./assets/js/app/utils"
+    }
+  }
+}
