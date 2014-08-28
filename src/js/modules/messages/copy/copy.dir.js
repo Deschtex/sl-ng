@@ -43,4 +43,4 @@
 		});
 	}
 
-}(window.angular));
+}(require('angular')));

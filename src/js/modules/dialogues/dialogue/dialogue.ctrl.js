@@ -48,4 +48,4 @@
 		});
 	}
 
-}(window.angular));
+}(require('angular')));

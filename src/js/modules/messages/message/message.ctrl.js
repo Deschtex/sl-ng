@@ -30,4 +30,4 @@
 		});
 	}
 
-}(window.angular));
+}(require('angular')));

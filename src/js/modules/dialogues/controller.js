@@ -45,4 +45,4 @@
 		initialize();
 	}
 
-}(window.angular));
+}(require('angular')));

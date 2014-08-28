@@ -20,7 +20,7 @@
 		}
 		return ({
 			load: function () {
-				return $http.get('dialogues.json', {
+				return $http.get('../data.json', {
 					cache: Cache.get('app.dialogues')
 				});
 			},
@@ -35,4 +35,4 @@
 		});
 	}
 
-}(window.angular));
+}(require('angular')));

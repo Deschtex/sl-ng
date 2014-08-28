@@ -15,7 +15,7 @@
 	var eventlist = require('./eventlist.srv');
 	var eventbus = require('./eventbus.srv');
 	var cache = require('./cache.srv');
-	
+
 	/**
 	 * @ngdoc module
 	 * @name app.core
@@ -31,8 +31,8 @@
 	])
 	.config([
 		'DSCacheFactoryProvider',
-		function ($cache) {
-			$cache.setCacheDefaults({
+		function ($cacheProvider) {
+			$cacheProvider.setCacheDefaults({
 				cacheFlushInterval: 4500000,
 				deleteOnExpire: 'aggressive',
 				storageMode: 'localStorage'
