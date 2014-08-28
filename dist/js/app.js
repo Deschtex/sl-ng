@@ -36483,7 +36483,7 @@ return jQuery;
 	var eventlist = require('./eventlist.srv');
 	var eventbus = require('./eventbus.srv');
 	var cache = require('./cache.srv');
-	
+
 	/**
 	 * @ngdoc module
 	 * @name app.core
@@ -36499,8 +36499,8 @@ return jQuery;
 	])
 	.config([
 		'DSCacheFactoryProvider',
-		function ($cache) {
-			$cache.setCacheDefaults({
+		function ($cacheProvider) {
+			$cacheProvider.setCacheDefaults({
 				cacheFlushInterval: 4500000,
 				deleteOnExpire: 'aggressive',
 				storageMode: 'localStorage'
@@ -36565,8 +36565,8 @@ return jQuery;
 		initialize();
 	}
 
-}(window.angular));
-},{}],33:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],33:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36617,8 +36617,8 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{}],34:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],34:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36654,8 +36654,8 @@ return jQuery;
 		};
 	}
 
-}(window.angular));
-},{}],35:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],35:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36678,7 +36678,7 @@ return jQuery;
 		}
 		return ({
 			load: function () {
-				return $http.get('dialogues.json', {
+				return $http.get('data/dialogues.json', {
 					cache: Cache.get('app.dialogues')
 				});
 			},
@@ -36693,8 +36693,8 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{}],36:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],36:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36831,8 +36831,8 @@ return jQuery;
 		initialize();
 	}
 
-}(window.angular));
-},{}],39:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],39:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36879,8 +36879,8 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{}],40:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],40:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36926,8 +36926,8 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{}],41:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],41:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -36988,7 +36988,7 @@ return jQuery;
 	.run(function () {
 		console.log( '`app.messages` init' );
 	});
-
+	
 	//
 	// Mount module main controller
 	// 
@@ -37059,8 +37059,8 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{}],45:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22}],45:[function(require,module,exports){
 (function (ng) {
 
 	'use strict';
@@ -37103,23 +37103,30 @@ return jQuery;
 		});
 	}
 
-}(window.angular));
-},{"jquery":24}],46:[function(require,module,exports){
+}(require('angular')));
+},{"angular":22,"jquery":24}],46:[function(require,module,exports){
 (function () {
 
 	'use strict';
 
-	module.exports = function (comps) {
-		if ( ! Array.isArray(comps)) {
-			comps = [comps];
+	/**
+	 * Invokes all specified modules. This approach
+	 * makes it possible to pass in arguments from
+	 * the parent module, should it be neccessary.
+	 * @param {Array|Function} modules A list of modules or single module.
+	 */
+	function mount (modules) {
+		if ( ! Array.isArray(modules)) {
+			modules = [modules];
 		}
-		for (var i in comps) {
-			if (comps.hasOwnProperty(i)) {
-				comps[i].call(null);
+		for (var i in modules) {
+			if (modules.hasOwnProperty(i)) {
+				modules[i].call(null/*, args...*/);
 			}
 		}
-	};
+	}
+
+	module.exports = mount;
 
 }());
-
 },{}]},{},[26]);

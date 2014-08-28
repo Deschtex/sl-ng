@@ -20,7 +20,7 @@
 		}
 		return ({
 			load: function () {
-				return $http.get('../data.json', {
+				return $http.get('data/dialogues.json', {
 					cache: Cache.get('app.dialogues')
 				});
 			},
