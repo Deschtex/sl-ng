@@ -26,7 +26,7 @@
 	])
 	.run(function () {
 		console.log( '`app.messages` init' );
-	})
+	});
 
 	//
 	// Mount module main controller
