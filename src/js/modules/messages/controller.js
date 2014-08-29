@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages').controller(
-			'MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]);
 	};
 
 	/**

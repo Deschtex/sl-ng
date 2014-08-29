@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues').controller(
-			'DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]);
 	};
 
 	/**

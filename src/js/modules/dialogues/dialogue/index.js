@@ -21,11 +21,11 @@
 	 * The `app.dialogues.dialogue` module handles 
 	 * the dialogues dialogue item.
 	 */
-	ng.module('app.dialogues.dialogue', []);
+	var mod = ng.module('app.dialogues.dialogue', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive, service]);
+	mount([ctrl, directive, service], mod);
 
 }(require('angular')));

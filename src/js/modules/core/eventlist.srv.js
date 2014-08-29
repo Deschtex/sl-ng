@@ -2,8 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory('EventList', F);
+	module.exports = function (mod) {
+		mod.factory('EventList', F);
 	};
 
 	function F () {

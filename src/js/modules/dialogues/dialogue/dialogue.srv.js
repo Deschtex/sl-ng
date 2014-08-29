@@ -2,15 +2,13 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').factory(
-			'Dialogue', ['$http', 'Cache', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('Dialogue', ['$http', 'Cache', F]);
 	};
 
 	/**
 	 * @ngdoc factory
-	 * @module app.dialogues
+	 * @module app.dialogues.dialogue
 	 * @name Dialogue
 	 */
 	function F ($http, Cache) {

@@ -2,15 +2,13 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.message').controller(
-			'MessageCtrl', ['$scope', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessageCtrl', ['$scope', F]);
 	};
 
 	/**
 	 * @ngdoc controller
-	 * @module app.messages
+	 * @module app.messages.message
 	 * @name MessageCtrl
 	 */
 	function F ($scope) {

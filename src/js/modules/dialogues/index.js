@@ -19,7 +19,7 @@
 	 * The `app.dialogues` module handles 
 	 * the dialogues view of the app.
 	 */
-	ng.module('app.dialogues', [
+	var mod = ng.module('app.dialogues', [
 		'app.dialogues.dialogue'    // Dialogue item sub-module
 	])
 	.run(function () {
@@ -29,6 +29,6 @@
 	//
 	// Mount module main controller
 	// 
-	mount(require('./controller'));
+	mount(require('./controller'), mod);
 
 }(require('angular')));

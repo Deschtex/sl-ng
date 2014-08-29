@@ -26,7 +26,7 @@
 	 * The `app.core` module handles
 	 * the core parts of the app.
 	 */
-	ng.module('app.core', [
+	var mod = ng.module('app.core', [
 		'angular-data.DSCacheFactory'
 	])
 	.config([
@@ -46,6 +46,6 @@
 	//
 	// Mount module components
 	// 
-	mount([datetime, eventlist, eventbus, cache]);
+	mount([datetime, eventlist, eventbus, cache], mod);
 
 }(require('angular')));

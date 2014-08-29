@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'Cache', ['DSCacheFactory', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('Cache', ['DSCacheFactory', F]);
 	};
 
 	/**

@@ -4,8 +4,8 @@
 
 	var moment = require('moment');
 
-	module.exports = function () {
-		ng.module('app.core').filter('datetime', F);
+	module.exports = function (mod) {
+		mod.filter('datetime', F);
 	};
 
 	/**

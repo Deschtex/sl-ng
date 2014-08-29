@@ -4,15 +4,13 @@
 
 	var $ = require('jquery');
 
-	module.exports = function () {
-		ng.module('app.messages.message').directive(
-			'message', ['$timeout', F]
-		);
+	module.exports = function (mod) {
+		mod.directive('message', ['$timeout', F]);
 	};
 
 	/**
 	 * @ngdoc directive
-	 * @module app.messages
+	 * @module app.messages.message
 	 * @name message
 	 */
 	function F ($timeout) {

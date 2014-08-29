@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.copy').controller(
-			'MessageCopyCtrl', ['$scope', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessageCopyCtrl', ['$scope', F]);
 	};
 
 	/**
@@ -19,7 +17,7 @@
 		 * @type {Object}
 		 */
 		$scope.copyPos = { left: 0, top: 0 };
-		return ({ // Exposed API
+		return ({ // exposed API
 			/**
 			 * Sets the visibility of the copy button.
 			 * @param {Boolean} flag

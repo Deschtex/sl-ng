@@ -2,31 +2,21 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').controller(
-			'DialogueCtrl', ['$scope', 'Dialogue', 'EventBus', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('DialogueCtrl', [
+			'$scope', 'Dialogue', 'EventBus', 'EventList', F
+		]);
 	};
 
 	/**
 	 * @ngdoc controller
-	 * @module app.dialogues
+	 * @module app.dialogues.dialogue
 	 * @name DialogueCtrl
 	 */
 	function F ($scope, Dialogue, EventBus, EventList) {
-		/**
-		 * Gets the dialogue synopsis from the model.
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
 		$scope.getSynopsis = function (dialogue) {
 			return Dialogue.getSynopsis(dialogue.messages);
 		};
-		/**
-		 * Gets the dialogue time from the model. 
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
 		$scope.getTime = function (dialogue) {
 			return Dialogue.getTime(dialogue.messages);
 		};

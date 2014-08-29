@@ -12,19 +12,19 @@
 	
 	/**
 	 * @ngdoc module
-	 * @name app.dialogues.dialogue
+	 * @name app.messages.message
 	 * @description
 	 *
-	 * # app.dialogues.dialogue
+	 * # app.messages.message
 	 *
-	 * The `app.dialogues.dialogue` module handles 
-	 * the dialogues dialogue item.
+	 * The `app.messages.message` module handles 
+	 * the messages message item.
 	 */
-	ng.module('app.messages.message', []);
+	var mod = ng.module('app.messages.message', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive]);
+	mount([ctrl, directive], mod);
 
 }(require('angular')));

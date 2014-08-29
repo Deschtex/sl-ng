@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'EventBus', ['$rootScope', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('EventBus', ['$rootScope', 'EventList', F]);
 	};
 
 	/**

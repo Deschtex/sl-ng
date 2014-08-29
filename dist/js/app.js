@@ -36494,7 +36494,7 @@ return jQuery;
 	 * The `app.core` module handles
 	 * the core parts of the app.
 	 */
-	ng.module('app.core', [
+	var mod = ng.module('app.core', [
 		'angular-data.DSCacheFactory'
 	])
 	.config([
@@ -36514,7 +36514,7 @@ return jQuery;
 	//
 	// Mount module components
 	// 
-	mount([datetime, eventlist, eventbus, cache]);
+	mount([datetime, eventlist, eventbus, cache], mod);
 
 }(require('angular')));
 },{"./../../utils/mount":46,"./cache.srv":27,"./datetime.flt":28,"./eventbus.srv":29,"./eventlist.srv":30,"angular":22,"angular-cache/src":20}],32:[function(require,module,exports){
@@ -36522,10 +36522,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues').controller(
-			'DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]);
 	};
 
 	/**
@@ -36571,31 +36569,21 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').controller(
-			'DialogueCtrl', ['$scope', 'Dialogue', 'EventBus', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('DialogueCtrl', [
+			'$scope', 'Dialogue', 'EventBus', 'EventList', F
+		]);
 	};
 
 	/**
 	 * @ngdoc controller
-	 * @module app.dialogues
+	 * @module app.dialogues.dialogue
 	 * @name DialogueCtrl
 	 */
 	function F ($scope, Dialogue, EventBus, EventList) {
-		/**
-		 * Gets the dialogue synopsis from the model.
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
 		$scope.getSynopsis = function (dialogue) {
 			return Dialogue.getSynopsis(dialogue.messages);
 		};
-		/**
-		 * Gets the dialogue time from the model. 
-		 * @param  {Object} dialogue
-		 * @return {String}
-		 */
 		$scope.getTime = function (dialogue) {
 			return Dialogue.getTime(dialogue.messages);
 		};
@@ -36623,15 +36611,13 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').directive(
-			'dialogue', ['$timeout', F]
-		);
+	module.exports = function (mod) {
+		mod.directive('dialogue', ['$timeout', F]);
 	};
 
 	/**
 	 * @ngdoc directive
-	 * @module app.dialogues
+	 * @module app.dialogues.dialogue
 	 * @name dialogue
 	 */
 	function F ($timeout) {
@@ -36639,15 +36625,14 @@ return jQuery;
 			restrict: 'CA',
 			controller: 'DialogueCtrl',
 			link: function (scope, element, attrs, ctrl) {
-				var dialogue = scope.dialogue;
 				element.bind('touchstart', function () {
 					$timeout(function () {
-						ctrl.select(dialogue);
+						ctrl.select(scope.dialogue);
 					}, 150);
 				});
 				element.bind('touchend', function () {
 					scope.$apply(function () {
-						ctrl.publishSelected(dialogue);
+						ctrl.publishSelected(scope.dialogue);
 					});
 				});
 			}
@@ -36660,15 +36645,13 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.dialogues.dialogue').factory(
-			'Dialogue', ['$http', 'Cache', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('Dialogue', ['$http', 'Cache', F]);
 	};
 
 	/**
 	 * @ngdoc factory
-	 * @module app.dialogues
+	 * @module app.dialogues.dialogue
 	 * @name Dialogue
 	 */
 	function F ($http, Cache) {
@@ -36718,12 +36701,12 @@ return jQuery;
 	 * The `app.dialogues.dialogue` module handles 
 	 * the dialogues dialogue item.
 	 */
-	ng.module('app.dialogues.dialogue', []);
+	var mod = ng.module('app.dialogues.dialogue', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive, service]);
+	mount([ctrl, directive, service], mod);
 
 }(require('angular')));
 },{"./../../../utils/mount":46,"./dialogue.ctrl":33,"./dialogue.dir":34,"./dialogue.srv":35,"angular":22}],37:[function(require,module,exports){
@@ -36748,7 +36731,7 @@ return jQuery;
 	 * The `app.dialogues` module handles 
 	 * the dialogues view of the app.
 	 */
-	ng.module('app.dialogues', [
+	var mod = ng.module('app.dialogues', [
 		'app.dialogues.dialogue'    // Dialogue item sub-module
 	])
 	.run(function () {
@@ -36758,7 +36741,7 @@ return jQuery;
 	//
 	// Mount module main controller
 	// 
-	mount(require('./controller'));
+	mount(require('./controller'), mod);
 
 }(require('angular')));
 },{"./../../utils/mount":46,"./controller":32,"./dialogue":36,"angular":22}],38:[function(require,module,exports){
@@ -36766,10 +36749,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages').controller(
-			'MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]);
 	};
 
 	/**
@@ -36837,10 +36818,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.copy').controller(
-			'MessageCopyCtrl', ['$scope', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessageCopyCtrl', ['$scope', F]);
 	};
 
 	/**
@@ -36854,7 +36833,7 @@ return jQuery;
 		 * @type {Object}
 		 */
 		$scope.copyPos = { left: 0, top: 0 };
-		return ({ // Exposed API
+		return ({ // exposed API
 			/**
 			 * Sets the visibility of the copy button.
 			 * @param {Boolean} flag
@@ -36950,12 +36929,12 @@ return jQuery;
 	 * The `app.messages.copy` module handles 
 	 * the messages copy button.
 	 */
-	ng.module('app.messages.copy', []);
+	var mod = ng.module('app.messages.copy', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive]);
+	mount([ctrl, directive], mod);
 
 }(require('angular')));
 },{"./../../../utils/mount":46,"./copy.ctrl":39,"./copy.dir":40,"angular":22}],42:[function(require,module,exports){
@@ -36981,18 +36960,22 @@ return jQuery;
 	 * The `app.messages` module handles
 	 * the messages view of the app.
 	 */
-	ng.module('app.messages', [
+	var mod = ng.module('app.messages', [
 		'app.messages.message',    // Message item sub-module
 		'app.messages.copy'        // Message copy button sub-module
 	])
+	.config(function () {
+		console.log( this );
+		console.log( arguments );
+	})
 	.run(function () {
 		console.log( '`app.messages` init' );
 	});
-	
+
 	//
 	// Mount module main controller
 	// 
-	mount(require('./controller'));
+	mount(require('./controller'), mod);
 
 }(require('angular')));
 },{"./../../utils/mount":46,"./controller":38,"./copy":41,"./message":43,"angular":22}],43:[function(require,module,exports){
@@ -37010,20 +36993,20 @@ return jQuery;
 	
 	/**
 	 * @ngdoc module
-	 * @name app.dialogues.dialogue
+	 * @name app.messages.message
 	 * @description
 	 *
-	 * # app.dialogues.dialogue
+	 * # app.messages.message
 	 *
-	 * The `app.dialogues.dialogue` module handles 
-	 * the dialogues dialogue item.
+	 * The `app.messages.message` module handles 
+	 * the messages message item.
 	 */
-	ng.module('app.messages.message', []);
+	var mod = ng.module('app.messages.message', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive]);
+	mount([ctrl, directive], mod);
 
 }(require('angular')));
 },{"./../../../utils/mount":46,"./message.ctrl":44,"./message.dir":45,"angular":22}],44:[function(require,module,exports){
@@ -37031,15 +37014,13 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.message').controller(
-			'MessageCtrl', ['$scope', F]
-		);
+	module.exports = function (mod) {
+		mod.controller('MessageCtrl', ['$scope', F]);
 	};
 
 	/**
 	 * @ngdoc controller
-	 * @module app.messages
+	 * @module app.messages.message
 	 * @name MessageCtrl
 	 */
 	function F ($scope) {
@@ -37067,15 +37048,13 @@ return jQuery;
 
 	var $ = require('jquery');
 
-	module.exports = function () {
-		ng.module('app.messages.message').directive(
-			'message', ['$timeout', F]
-		);
+	module.exports = function (mod) {
+		mod.directive('message', ['$timeout', F]);
 	};
 
 	/**
 	 * @ngdoc directive
-	 * @module app.messages
+	 * @module app.messages.message
 	 * @name message
 	 */
 	function F ($timeout) {
@@ -37110,18 +37089,19 @@ return jQuery;
 	'use strict';
 
 	/**
-	 * Invokes all specified modules. This approach
+	 * Invokes all specified components. This approach
 	 * makes it possible to pass in arguments from
 	 * the parent module, should it be neccessary.
-	 * @param {Array|Function} modules A list of modules or single module.
+	 * @param {Array|Function} comps A list of components or single module.
+	 * @param {=Object} mod Module to mount to
 	 */
-	function mount (modules) {
-		if ( ! Array.isArray(modules)) {
-			modules = [modules];
+	function mount (comps, mod) {
+		if ( ! Array.isArray(comps)) {
+			comps = [comps];
 		}
-		for (var i in modules) {
-			if (modules.hasOwnProperty(i)) {
-				modules[i].call(null/*, args...*/);
+		for (var i in comps) {
+			if (comps.hasOwnProperty(i)) {
+				comps[i].call(null, mod);
 			}
 		}
 	}

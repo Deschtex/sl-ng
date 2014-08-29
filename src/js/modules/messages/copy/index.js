@@ -20,11 +20,11 @@
 	 * The `app.messages.copy` module handles 
 	 * the messages copy button.
 	 */
-	ng.module('app.messages.copy', []);
+	var mod = ng.module('app.messages.copy', []);
 
 	//
 	// Mount sub-module components
 	// 
-	mount([ctrl, directive]);
+	mount([ctrl, directive], mod);
 
 }(require('angular')));

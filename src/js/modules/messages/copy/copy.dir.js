@@ -2,10 +2,8 @@
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.copy').directive(
-			'messageCopy', ['$timeout', F]
-		);
+	module.exports = function (mod) {
+		mod.directive('messageCopy', ['$timeout', F]);
 	};
 
 	/**
