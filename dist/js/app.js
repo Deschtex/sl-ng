@@ -36338,10 +36338,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'Cache', ['DSCacheFactory', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('Cache', ['DSCacheFactory', F]);
 	};
 
 	/**
@@ -36365,8 +36363,8 @@ return jQuery;
 
 	var moment = require('moment');
 
-	module.exports = function () {
-		ng.module('app.core').filter('datetime', F);
+	module.exports = function (mod) {
+		mod.filter('datetime', F);
 	};
 
 	/**
@@ -36404,10 +36402,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory(
-			'EventBus', ['$rootScope', 'EventList', F]
-		);
+	module.exports = function (mod) {
+		mod.factory('EventBus', ['$rootScope', 'EventList', F]);
 	};
 
 	/**
@@ -36451,8 +36447,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.core').factory('EventList', F);
+	module.exports = function (mod) {
+		mod.factory('EventList', F);
 	};
 
 	function F () {
@@ -36864,10 +36860,8 @@ return jQuery;
 
 	'use strict';
 
-	module.exports = function () {
-		ng.module('app.messages.copy').directive(
-			'messageCopy', ['$timeout', F]
-		);
+	module.exports = function (mod) {
+		mod.directive('messageCopy', ['$timeout', F]);
 	};
 
 	/**
@@ -36964,10 +36958,6 @@ return jQuery;
 		'app.messages.message',    // Message item sub-module
 		'app.messages.copy'        // Message copy button sub-module
 	])
-	.config(function () {
-		console.log( this );
-		console.log( arguments );
-	})
 	.run(function () {
 		console.log( '`app.messages` init' );
 	});
