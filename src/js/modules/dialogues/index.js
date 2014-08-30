@@ -20,7 +20,7 @@
 	 * the dialogues view of the app.
 	 */
 	var mod = ng.module('app.dialogues', [
-		'app.dialogues.dialogue'    // Dialogue item sub-module
+		'app.dialogues.dialogue' // Dialogue item sub-module
 	])
 	.run(function () {
 		console.log( '`app.dialogues` init' );

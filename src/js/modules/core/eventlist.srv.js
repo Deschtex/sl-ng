@@ -6,6 +6,11 @@
 		mod.factory('EventList', F);
 	};
 
+	/**
+	 * @ngdoc factory
+	 * @module app.core
+	 * @name EventList
+	 */
 	function F () {
 		return {
 			SWITCH_VIEW: 'switch-view',

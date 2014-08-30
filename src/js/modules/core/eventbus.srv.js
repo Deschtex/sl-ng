@@ -19,7 +19,7 @@
 					events.push(EventList[i]);
 				}
 				return function (name) {
-					return !!~events.indexOf(name);
+					return ~events.indexOf(name);
 				};
 			}
 		());
@@ -35,7 +35,6 @@
 					throw 'EventBus.publish(): Event `' + name + '` not supported.';
 				}
 				$rootScope.$broadcast.apply($rootScope, arguments);
-				// console.log( 'EventBus.publish(): `%s`', name );
 			}
 		});
 	}
