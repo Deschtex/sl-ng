@@ -56,6 +56,7 @@ module.exports = function (grunt) {
 				eqeqeq: true,
 				undef: true,
 				multistr: true,
+				laxcomma: true,
 				globals: {
 					"window": true,
 					"console": true,
