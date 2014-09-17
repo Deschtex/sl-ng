@@ -26,7 +26,7 @@
 			 * @param {Object} dialogue
 			 */
 			publishSelected: function (dialogue) {
-				EventBus.publish(EventList.DIALOGUE_SELECTED, dialogue);
+				EventBus.trigger(EventList.DIALOGUE_SELECTED, dialogue);
 			},
 			/**
 			 * Sets the selected dialogue on the parent scope.

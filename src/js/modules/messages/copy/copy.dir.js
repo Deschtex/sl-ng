@@ -13,10 +13,10 @@
 	 */
 	function F ($timeout) {
 		return ({
-			restrict: 'CA',
+			restrict: 'E',
 			controller: 'MessageCopyCtrl',
 			link: function (scope, element, attrs, ctrl) {
-				element.bind('touchstart', function (e) {
+				element.bind('touchstart', function () {
 					element.addClass('is-active');
 				});
 				element.bind('touchend', function () {

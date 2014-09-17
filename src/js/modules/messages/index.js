@@ -6,9 +6,10 @@
 
 	//
 	// Load sub-modules
-	// 
+	//
 	require('./message');
 	require('./copy');
+	require('./composer');
 
 	/**
 	 * @ngdoc module
@@ -22,7 +23,8 @@
 	 */
 	var mod = ng.module('app.messages', [
 		'app.messages.message', // Message item sub-module
-		'app.messages.copy'     // Message copy button sub-module
+		'app.messages.copy',    // Message copy button sub-module
+		'app.messages.composer' // Message composer sub-module
 	])
 	.run(function () {
 		console.log( '`app.messages` init' );
@@ -30,7 +32,7 @@
 
 	//
 	// Mount module main controller
-	// 
+	//
 	mount(require('./controller'), mod);
 
 }(require('angular')));

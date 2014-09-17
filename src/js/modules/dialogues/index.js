@@ -6,7 +6,7 @@
 
 	//
 	// Load sub-modules
-	// 
+	//
 	require('./dialogue');
 
 	/**
@@ -16,7 +16,7 @@
 	 *
 	 * # app.dialogues
 	 *
-	 * The `app.dialogues` module handles 
+	 * The `app.dialogues` module handles
 	 * the dialogues view of the app.
 	 */
 	var mod = ng.module('app.dialogues', [
@@ -28,7 +28,7 @@
 
 	//
 	// Mount module main controller
-	// 
+	//
 	mount(require('./controller'), mod);
 
 }(require('angular')));

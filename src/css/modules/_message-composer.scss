@@ -1,0 +1,28 @@
+@import "../utils";
+
+/////////////////////////////////////////
+///
+/// 	MESSAGE COMPOSER [SUB-MODULE]
+/// 	@module app.messages.composer
+///
+/////////////////////////////////////////
+
+message-composer {
+
+	@extend %sub-module;
+
+	keyboard {}
+
+	key {
+
+		.key__value {
+			font-weight: bold;
+		}
+		.key__extra {
+			&:before { content: '['; }
+			&:after { content: ']'; }
+		}
+
+	}
+
+}

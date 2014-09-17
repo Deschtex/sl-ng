@@ -24,17 +24,17 @@
 			}
 		());
 		return ({
-			subscribe: function (name, handler, scope) {
+			trigger: function (name/*,...args*/) {
 				if ( ! isSupportedEvent(name)) { // not allowed
-					throw 'EventBus.subscribe(): Event `' + name + '` not supported';
-				}
-				(scope || $rootScope).$on(name, handler);
-			},
-			publish: function (name/*, args...*/) {
-				if ( ! isSupportedEvent(name)) { // not allowed
-					throw 'EventBus.publish(): Event `' + name + '` not supported.';
+					throw 'EventBus.trigger(): Event `' + name + '` not supported.';
 				}
 				$rootScope.$broadcast.apply($rootScope, arguments);
+			},
+			on: function (name, handler, scope) {
+				if ( ! isSupportedEvent(name)) { // not allowed
+					throw 'EventBus.on(): Event `' + name + '` not supported';
+				}
+				(scope || $rootScope).$on(name, handler);
 			}
 		});
 	}

@@ -15,7 +15,11 @@
 	 */
 	function F ($timeout) {
 		return ({
-			restrict: 'CA',
+			restrict: 'E',
+			template: '\
+				<time class="message__time" ng-hide="isHiddenTime(message.timestamp, $index)">{{message.timestamp | datetime:\'long\'}}</time>\
+				<span class="message__text">{{message.text}}</span>\
+			',
 			controller: 'MessageCtrl',
 			link: function (scope, element, attrs, ctrl) {
 				element.bind('touchstart', function () {

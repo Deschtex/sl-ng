@@ -1,0 +1,14 @@
+@import "../utils";
+
+/////////////////////////////////////////
+///
+/// 	MESSAGE [SUB-MODULE]
+/// 	@module app.messages.message
+///
+/////////////////////////////////////////
+
+message {
+
+	@extend %sub-module;
+
+}

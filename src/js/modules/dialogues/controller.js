@@ -2,8 +2,12 @@
 
 	'use strict';
 
+	var cfg = require('config');
+
 	module.exports = function (mod) {
-		mod.controller('DialoguesCtrl', ['$scope', 'Cache', 'Dialogue', F]);
+		mod.controller('DialoguesCtrl', [
+			'$scope', '$http', 'Cache', F.bind(mod)
+		]);
 	};
 
 	/**
@@ -11,12 +15,12 @@
 	 * @module app.dialogues
 	 * @name DialoguesCtrl
 	 */
-	function F ($scope, Cache, Dialogue) {
+	function F ($scope, $http, Cache) {
 		/**
 		 * Global cache for the dialogues module.
 		 * @type {Object}
 		 */
-		$scope.cache = Cache.create('app.dialogues');
+		$scope.cache = Cache.create(this.name);
 		/**
 		 * Holds the currently selected dialogue,
 		 * which is used to determine which dialogue
@@ -32,15 +36,15 @@
 		$scope.isSelected = function (dialogue) {
 			return $scope.selectedDialogue === dialogue;
 		};
-		/**
-		 * Initialize function.
-		 */
-		function initialize () {
-			Dialogue.load().success(function (dialogues) {
-				$scope.dialogues = dialogues;
-			});
-		}
-		initialize();
+		//
+		// Load dialogues and cache them
+		//
+		$http.get(cfg.dialoguesDataURL, {
+			cache: Cache.get(this.name)
+		})
+		.success(function (dialogues) {
+			$scope.dialogues = dialogues;
+		});
 	}
 
 }(require('angular')));

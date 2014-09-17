@@ -2,6 +2,8 @@
 
 	'use strict';
 
+	var cfg = require('config');
+
 	module.exports = function (mod) {
 		mod.controller('MessagesCtrl', ['$scope', 'EventBus', 'EventList', F]);
 	};
@@ -29,7 +31,7 @@
 		};
 		/**
 		 * Decides whether to show the time or not
-		 * by calculating the difference between the 
+		 * by calculating the difference between the
 		 * current message's time and the previous
 		 * message's time. If the delta is less than
 		 * 10 minutes, the time should be hidden.
@@ -53,7 +55,7 @@
 		 * Initialize function.
 		 */
 		function initialize () {
-			EventBus.subscribe(
+			EventBus.on( // subscribe
 				EventList.DIALOGUE_SELECTED,
 				function (e, dialogue) {
 					$scope.selectedMessage = null;

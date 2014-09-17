@@ -4,7 +4,7 @@
 
 	//
 	// Load main app modules
-	// 
+	//
 	require('./modules/core');
 	require('./modules/dialogues');
 	require('./modules/messages');
@@ -15,7 +15,7 @@
 	 * @description
 	 *
 	 * # app (core module)
-	 * 
+	 *
 	 * The `app` module is the module being
 	 * loaded by the page and requires all
 	 * other neccessary app modules.

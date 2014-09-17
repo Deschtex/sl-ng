@@ -13,7 +13,13 @@
 	 */
 	function F ($timeout) {
 		return {
-			restrict: 'CA',
+			restrict: 'E',
+			template: '\
+				<span class="dialogue__name">{{dialogue.name}}</span>\
+				<span class="dialogue__synopsis">{{getSynopsis(dialogue)}}</span>\
+				<time class="dialogue__time">{{getTime(dialogue) | datetime:\'short\'}}</time>\
+				<i class="dialogue__arrow"></i>\
+			',
 			controller: 'DialogueCtrl',
 			link: function (scope, element, attrs, ctrl) {
 				element.bind('touchstart', function () {

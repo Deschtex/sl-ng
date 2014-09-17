@@ -10,16 +10,17 @@
 	 * @param {Object} mod Module to mount to
 	 */
 	function mount (comps, mod) {
-		if ( ! Array.isArray(comps)) {
-			comps = [comps];
-		}
-		for (var i in comps) {
-			if (comps.hasOwnProperty(i)) {
-				comps[i].call(null, mod);
+		if (Array.isArray(comps)) {
+			for (var i in comps) {
+				if (comps.hasOwnProperty(i)) {
+					mount(comps[i], mod);
+				}
 			}
+		} else {
+			comps(mod);
 		}
 	}
-	
+
 	module.exports = mount;
 
 }());

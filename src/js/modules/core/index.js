@@ -6,15 +6,16 @@
 
 	//
 	// Load third-party cache
-	// 
+	//
 	require('angular-cache/src');
+
 	//
 	// Load module components
 	//
-	var datetime = require('./datetime.flt');
-	var eventlist = require('./eventlist.srv');
-	var eventbus = require('./eventbus.srv');
-	var cache = require('./cache.srv');
+	var datetime	= require('./datetime.flt')
+		, eventlist	= require('./eventlist.srv')
+		, eventbus	= require('./eventbus.srv')
+		, cache			= require('./cache.srv');
 
 	/**
 	 * @ngdoc module
@@ -32,6 +33,7 @@
 	.config([
 		'DSCacheFactoryProvider',
 		function ($cacheProvider) {
+			// configure third-party cache
 			$cacheProvider.setCacheDefaults({
 				cacheFlushInterval: 4500000,
 				deleteOnExpire: 'aggressive',
@@ -45,7 +47,7 @@
 
 	//
 	// Mount module components
-	// 
+	//
 	mount([datetime, eventlist, eventbus, cache], mod);
 
 }(require('angular')));

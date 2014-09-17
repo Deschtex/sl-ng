@@ -1,34 +1,18 @@
-	.is-selected { 
-		color: white;
-		background-color: blue;
-	}
-	.is-active {
-		color: red;
-	}
-	.view--messages {
-		position: relative;
-	}
-	.message-copy {
-		color: white;
-		background-color: #111;
-		transition: opacity .2s linear;
-		position: absolute;
-		top: 0;
-		left: 0;
-	}
-	.message-copy.is-hidden {
-		opacity: 0;
-	}
-	.message-copy:after {
-		content: attr(data-text);
-		padding: 10px 20px;
-		display: block;
-	}
-	.message-copy.is-active {
-		background-color: #333;
-	}
-	.app {
-		width: 400px;
-		height: 400px;
-		position: relative;
-	}
+@import "modules/all";
+
+.is-selected {
+	color: white;
+	background-color: blue;
+}
+.is-active {
+	color: red;
+}
+
+.app {
+	width: 400px;
+	height: 400px;
+	position: relative;
+}
+.view--messages {
+	position: relative;
+}

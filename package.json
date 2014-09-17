@@ -28,6 +28,7 @@
   },
   "aliasify": {
     "aliases": {
+      "config": "./src/js/config",
       "utils": "./src/js/utils"
     }
   }

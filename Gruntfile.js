@@ -34,9 +34,19 @@ module.exports = function (grunt) {
 			}
 		},
 		watch: {
+			sass: {
+				files: ['src/css/**/*.scss'],
+				tasks: ['sass'],
+				options: {
+					spawn: false
+				}
+			},
 			js: {
-				files: ['**/*.js'],
-				tasks: ['default']
+				files: ['src/js/**/*.js'],
+				tasks: ['jshint', 'browserify'],
+				options: {
+					spawn: false
+				}
 			}
 		},
 		jshint: {
@@ -45,6 +55,7 @@ module.exports = function (grunt) {
 				curly: true,
 				eqeqeq: true,
 				undef: true,
+				multistr: true,
 				globals: {
 					"window": true,
 					"console": true,
@@ -67,7 +78,7 @@ module.exports = function (grunt) {
 		'jshint', 'browserify', 'uglify:js', 'sass', 'cssmin'
 	]);
 	grunt.registerTask('dev', [
-		'jshint', 'browserify', 'sass'
+		'jshint', 'browserify', 'sass', 'watch'
 	]);
 
 };
