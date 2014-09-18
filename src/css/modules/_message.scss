@@ -2,13 +2,13 @@
 
 /////////////////////////////////////////
 ///
-/// 	MESSAGE [SUB-MODULE]
-/// 	@module app.messages.message
+///   MESSAGE [SUB-MODULE]
+///   @module app.messages.message
 ///
 /////////////////////////////////////////
 
 message {
 
-	@extend %sub-module;
+  @extend %sub-module;
 
 }

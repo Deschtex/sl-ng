@@ -1,20 +1,20 @@
 (function (ng) {
 
-	'use strict';
+  'use strict';
 
-	module.exports = function (mod) {
-		mod.factory('EventList', F);
-	};
+  module.exports = function (mod) {
+    mod.factory('EventList', F);
+  };
 
-	/**
-	 * @ngdoc factory
-	 * @module app.core
-	 * @name EventList
-	 */
-	function F () {
-		return {
-			DIALOGUE_SELECTED: 'dialogues:dialogue-selected'
-		};
-	}
+  /**
+   * @ngdoc factory
+   * @module app.core
+   * @name EventList
+   */
+  function F () {
+    return {
+      DIALOGUE_SELECTED: 'dialogues:dialogue-selected'
+    };
+  }
 
 }(require('angular')));

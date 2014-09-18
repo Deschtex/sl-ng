@@ -2,27 +2,27 @@
 
 /////////////////////////////////////////
 ///
-/// 	MESSAGE COMPOSER [SUB-MODULE]
-/// 	@module app.messages.composer
+///   MESSAGE COMPOSER [SUB-MODULE]
+///   @module app.messages.composer
 ///
 /////////////////////////////////////////
 
 message-composer {
 
-	@extend %sub-module;
+  @extend %sub-module;
 
-	keyboard {}
+  keyboard {}
 
-	key {
+  key {
 
-		.key__value {
-			font-weight: bold;
-		}
-		.key__extra {
-			&:before { content: '['; }
-			&:after { content: ']'; }
-		}
+    .key__value {
+      font-weight: bold;
+    }
+    .key__extras {
+      &:before { content: '['; }
+      &:after  { content: ']'; }
+    }
 
-	}
+  }
 
 }

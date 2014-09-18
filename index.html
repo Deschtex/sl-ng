@@ -2,68 +2,69 @@
 <html>
 <head>
 
-	<title>Meddelanden</title>
+  <title>Meddelanden</title>
 
-	<meta charset="utf-8">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="initial-scale=0.5, maximum-scale=1, user-scalable=no">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="initial-scale=0.5, maximum-scale=1, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-	<link rel="stylesheet" href="dist/css/app.css">
+  <link rel="stylesheet" href="dist/css/app.css">
 
 </head>
 
 <body>
 
-	<div class="app" ng-app="app">
-		<div class="app__views">
-			<section
-				class="view view--dialogues"
-				ng-controller="DialoguesCtrl">
-				<h2>Dialogues</h2>
-				<div class="view__content">
-					<div class="dialogues-search-bar"></div>
-					<div class="dialogues">
-						<dialogue
-							ng-repeat="dialogue in dialogues"
-							ng-class="{ 'is-selected': isSelected(dialogue) }">
-						</dialogue>
-					</div>
-				</div>
-			</section>
-			<section
-				class="view view--messages"
-				ng-controller="MessagesCtrl">
-				<h2>Messages</h2>
-				<div class="view__content">
-					<div class="messages" ng-show="dialogue">
-						<message
-							ng-repeat="message in dialogue.messages"
-							ng-class="[getSelectedClass(message), getTypeClass(message)]">
-						</message>
-					</div>
-					<message-copy
-						text="Kopiera"
-						ng-show="isCopyVisible"
-						ng-style="{ left: cp.left + 'px', top: cp.top + 'px' }">
-					</message-copy>
-					<message-composer>
-						<div class="message-composer__input">
-							<input type="text" placeholder="iMessage">
-						</div>
-						<div class="message-composer__keyboard">
-							<keyboard ng-visible="keys.length">
-								<key ng-repeat="key in keys"></key>
-							</keyboard>
-						</div>
-					</message-composer>
-				</div>
-			</section>
-		</div>
-	</div>
+  <div class="app" ng-app="app">
+    <div class="app__views">
+      <section
+        class="view view--dialogues"
+        ng-controller="DialoguesCtrl">
+        <h2>Dialogues</h2>
+        <div class="view__content">
+          <div class="dialogues-search-bar"></div>
+          <div class="dialogues">
+            <dialogue
+              ng-repeat="dialogue in dialogues"
+              ng-class="{ 'is-selected': isSelected(dialogue) }">
+            </dialogue>
+          </div>
+        </div>
+      </section>
+      <section
+        class="view view--messages"
+        ng-controller="MessagesCtrl"
+        ng-show="dialogue">
+        <h2>Messages</h2>
+        <div class="view__content">
+          <div class="messages">
+            <message
+              ng-repeat="message in dialogue.messages"
+              ng-class="[getSelectedClass(message), getTypeClass(message)]">
+            </message>
+          </div>
+          <message-copy
+            text="Kopiera"
+            ng-show="isCopyVisible"
+            ng-style="{ left: copyPos.left + 'px', top: copyPos.top + 'px' }">
+          </message-copy>
+          <message-composer>
+            <div class="message-composer__input">
+              <input type="text" placeholder="iMessage">
+            </div>
+            <div class="message-composer__keyboard">
+              <keyboard ng-visible="keys.length">
+                <key ng-repeat="key in keys"></key>
+              </keyboard>
+            </div>
+          </message-composer>
+        </div>
+      </section>
+    </div>
+  </div>
 
-	<script src="dist/js/app.js"></script>
+  <script src="dist/js/app.js"></script>
 
 </body>
 

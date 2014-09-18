@@ -1,65 +1,65 @@
 [
-	{
-		"name": "Foo Bar",
-		"messages": [
-			{
-				"type": "in",
-				"timestamp": 1390002512763,
-				"text": "Test test test test test test test test test"
-			},
-			{
-				"type": "out",
-				"timestamp": 1390002512763,
-				"text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis hic iure atque culpa minima dolorum vero sapiente eos asperiores. Tenetur quam iste provident aperiam suscipit!"
-			},
-			{
-				"type": "out",
-				"timestamp": 1390006274498,
-				"text": "Hejsan svejsan"
-			},
-			{
-				"type": "in",
-				"timestamp": 1390006308932,
-				"text": "Jaja"
-			},
-			{
-				"type": "in",
-				"timestamp": 1390006318932,
-				"text": "Vad gör du? :- )"
-			},
-			{
-				"type": "out",
-				"timestamp": 1390221631872,
-				"text": "Inte mycket, själv?"
-			},
-			{
-				"type": "in",
-				"timestamp": 1401494977880,
-				"text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis hic iure atque culpa minima dolorum vero sapiente eos asperiores. Tenetur quam iste provident aperiam suscipit!"
-			}
-		],
-		"time": "20:49"
-	},
-	{
-		"name": "John Doe",
-		"messages": [
-			{
-				"type": "out",
-				"timestamp": 1390213924098,
-				"text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis."
-			}
-		],
-		"time": "13:11"
-	},
-	{
-		"name": "Dr. Einstein",
-		"messages": [
-			{
-				"type": "in",
-				"timestamp": 1390093328071,
-				"text": "Are you there?"
-			}
-		],
-		"time": "torsdag"
-	}
+  {
+    "name": "Foo Bar",
+    "messages": [
+      {
+        "type": "in",
+        "timestamp": 1390002512763,
+        "text": "Test test test test test test test test test"
+      },
+      {
+        "type": "out",
+        "timestamp": 1390002512763,
+        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis hic iure atque culpa minima dolorum vero sapiente eos asperiores. Tenetur quam iste provident aperiam suscipit!"
+      },
+      {
+        "type": "out",
+        "timestamp": 1390006274498,
+        "text": "Hejsan svejsan"
+      },
+      {
+        "type": "in",
+        "timestamp": 1390006308932,
+        "text": "Jaja"
+      },
+      {
+        "type": "in",
+        "timestamp": 1390006318932,
+        "text": "Vad gör du? :- )"
+      },
+      {
+        "type": "out",
+        "timestamp": 1390221631872,
+        "text": "Inte mycket, själv?"
+      },
+      {
+        "type": "in",
+        "timestamp": 1401494977880,
+        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis hic iure atque culpa minima dolorum vero sapiente eos asperiores. Tenetur quam iste provident aperiam suscipit!"
+      }
+    ],
+    "time": "20:49"
+  },
+  {
+    "name": "John Doe",
+    "messages": [
+      {
+        "type": "out",
+        "timestamp": 1390213924098,
+        "text": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, cum, sunt, dicta voluptatum veritatis."
+      }
+    ],
+    "time": "13:11"
+  },
+  {
+    "name": "Dr. Einstein",
+    "messages": [
+      {
+        "type": "in",
+        "timestamp": 1390093328071,
+        "text": "Are you there?"
+      }
+    ],
+    "time": "torsdag"
+  }
 ]

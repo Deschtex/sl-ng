@@ -1,39 +1,39 @@
 (function (ng) {
 
-	'use strict';
+  'use strict';
 
-	var mount = require('utils/mount');
+  var mount = require('utils/mount');
 
-	//
-	// Load sub-module components
-	//
-	var composerCtrl	= require('./composer.ctrl')
-		, composerDir		= require('./composer.dir')
-		, keyCtrl				= require('./key.ctrl')
-		, keyDir				= require('./key.dir')
-		, keySrv				= require('./key.srv');
+  //
+  // Load sub-module components
+  //
+  var composerCtrl  = require('./composer.ctrl')
+    , composerDir   = require('./composer.dir')
+    , keyCtrl       = require('./key.ctrl')
+    , keyDir        = require('./key.dir')
+    , keySrv        = require('./key.srv');
 
-	//
-	// Setup sub-module component groups
-	//
-	var composer = [composerCtrl, composerDir]
-		, key	= [keyCtrl, keyDir, keySrv];
+  //
+  // Setup sub-module component groups
+  //
+  var composer = [composerCtrl, composerDir]
+    , key = [keyCtrl, keyDir, keySrv];
 
-	/**
-	 * @ngdoc module
-	 * @name app.messages.composer
-	 * @description
-	 *
-	 * # app.messages.composer
-	 *
-	 * The `app.messages.composer` module handles
-	 * the message composer (input & keyboard).
-	 */
-	var mod = ng.module('app.messages.composer', []);
+  /**
+  * @ngdoc module
+  * @name app.messages.composer
+  * @description
+  *
+  * # app.messages.composer
+  *
+  * The `app.messages.composer` module handles
+  * the message composer (input & keyboard).
+  */
+  var mod = ng.module('app.messages.composer', []);
 
-	//
-	// Mount sub-module components
-	//
-	mount([composer, key], mod);
+  //
+  // Mount sub-module components
+  //
+  mount([composer, key], mod);
 
 }(require('angular')));
