@@ -3,7 +3,7 @@
   "W",
   {
     "value": "E",
-    "extras": [
+    "specials": [
       "É", "È", "Ê", "Ë", "Ę"
     ]
   },
@@ -12,14 +12,14 @@
   "Y",
   {
     "value": "U",
-    "extras": [
+    "specials": [
       "Ú", "Û", "Ü", "Ù", "Ū"
     ]
   },
   "I",
   {
     "value": "O",
-    "extras": [
+    "specials": [
       "Ō", "Õ", "Ó", "Ò", "Ô", "Œ"
     ]
   },
@@ -27,7 +27,7 @@
   "Å",
   {
     "value": "A",
-    "extras": [
+    "specials": [
       "Á"
     ]
   },
@@ -41,13 +41,13 @@
   "L",
   {
     "value": "Ö",
-    "extras": [
+    "specials": [
       "Ø"
     ]
   },
   {
     "value": "Ä",
-    "extras": [
+    "specials": [
       "Æ"
     ]
   },

@@ -28,10 +28,10 @@
         }
         return key;
       },
-      getExtras: function (key) {
+      getSpecials: function (key) {
         key = parseData(key);
         if (typeof key === 'object') {
-          return key.extras.join(',');
+          return key.specials.join(',');
         }
       }
     });

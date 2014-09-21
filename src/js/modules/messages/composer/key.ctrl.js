@@ -15,22 +15,22 @@
     $scope.getValue = function (key) {
       return Key.getValue(key);
     };
-    $scope.getExtras = function (key) {
-      return Key.getExtras(key);
+    $scope.getSpecials = function (key) {
+      return Key.getSpecials(key);
     };
     function showValue (scope) {
       console.log('showing value...', scope.key);
     }
-    function showExtras (scope) {
-      console.log('showing extras...', scope.key);
+    function showSpecials (scope) {
+      console.log('showing specials...', scope.key);
     }
-    function hideExtras () {
-      console.log('hiding extras...');
+    function hideSpecials () {
+      console.log('hiding specials...');
     }
     return ({ // exposed API
       showValue: showValue,
-      showExtras: showExtras,
-      hideExtras: hideExtras
+      showSpecials: showSpecials,
+      hideSpecials: hideSpecials
     });
   }
 

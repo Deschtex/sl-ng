@@ -24,7 +24,7 @@
       link: function (scope, element, attrs, ctrl) {
         element.bind('touchstart', function () {
           this._timer = $timeout(function () {
-            ctrl.setCopyButtonSettings({
+            ctrl.setActionsSettings({
               width: $(element).outerWidth(),
               pos: $(element).offset()
             });

@@ -12,21 +12,21 @@
    * @name MessageCtrl
    */
   function F ($scope) {
-    $scope.getSelectedClass = function (message) {
-      return $scope.isSelected(message) && 'is-selected';
-    };
     $scope.getTypeClass = function (message) {
       return 'message--' + message.type;
+    };
+    $scope.getSelectedClass = function (me ssage) {
+      return $scope.isSelected(message) && 'is-selected';
     };
     function select (message) {
       $scope.$parent.selectedMessage = message;
     }
-    function setCopyButtonSettings (settings) {
+    function setActionsSettings (settings) {
       $scope.$parent.actionsSettings = settings;
     }
     return ({ // exposed API
       select: select,
-      setCopyButtonSettings: setCopyButtonSettings
+      setActionsSettings: setActionsSettings
     });
   }
 

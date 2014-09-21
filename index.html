@@ -24,7 +24,10 @@
         <div class="view__content">
           <dialogue-search></dialogue-search>
           <div class="dialogues">
-            <dialogue ng-repeat="dialogue in dialogues" ng-class="{ 'is-selected': isSelected(dialogue) }"></dialogue>
+            <dialogue
+              ng-repeat="dialogue in dialogues"
+              ng-class="{ 'is-selected': isSelected(dialogue) }">
+            </dialogue>
           </div>
         </div>
       </section>
@@ -34,9 +37,15 @@
         ng-show="dialogue">
         <div class="view__content">
           <div class="messages">
-            <message ng-repeat="message in dialogue.messages" ng-class="[getSelectedClass(message), getTypeClass(message)]"></message>
+            <message
+              ng-repeat="message in dialogue.messages"
+              ng-class="[getTypeClass(message), getSelectedClass(message)]">
+            </message>
           </div>
-          <message-actions ng-show="isActionsVisible" ng-style="actionsPosition"></message-actions>
+          <message-actions
+            ng-show="isActionsVisible"
+            ng-style="actionsPosition">
+          </message-actions>
           <message-composer></message-composer>
         </div>
       </section>
