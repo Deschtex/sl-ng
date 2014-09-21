@@ -14,5 +14,10 @@
   position: relative;
 }
 .view--messages {
-  position: relative;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  margin-top: 20px;
+  .view__content {
+    position: relative;
+  }
 }

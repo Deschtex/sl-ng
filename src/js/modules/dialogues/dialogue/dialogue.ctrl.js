@@ -20,21 +20,23 @@
     $scope.getTime = function (dialogue) {
       return Dialogue.getTime(dialogue.messages);
     };
+    /**
+     * Publishes the selected dialogue.
+     * @param {Object} dialogue
+     */
+    function publishSelected (dialogue) {
+      EventBus.trigger(EventList.DIALOGUE_SELECTED, dialogue);
+    }
+    /**
+     * Sets the selected dialogue on the parent scope.
+     * @param {Object} dialogue
+     */
+    function select(dialogue) {
+      $scope.$parent.selectedDialogue = dialogue;
+    }
     return ({ // exposed API
-      /**
-       * Publishes the selected dialogue.
-       * @param {Object} dialogue
-       */
-      publishSelected: function (dialogue) {
-        EventBus.trigger(EventList.DIALOGUE_SELECTED, dialogue);
-      },
-      /**
-       * Sets the selected dialogue on the parent scope.
-       * @param {Object} dialogue
-       */
-      select: function (dialogue) {
-        $scope.$parent.selectedDialogue = dialogue;
-      }
+      publishSelected: publishSelected,
+      select: select
     });
   }
 

@@ -3,18 +3,24 @@
   'use strict';
 
   module.exports = function (mod) {
-    mod.directive('messageCopy', ['$timeout', F]);
+    mod.directive('messageActions', ['$timeout', F]);
   };
 
   /**
    * @ngdoc directive
-   * @module app.messages.copy
+   * @module app.messages.actions
    * @name messageCopy
    */
   function F ($timeout) {
     return ({
       restrict: 'E',
-      controller: 'MessageCopyCtrl',
+      template: '\
+        <div class="message-actions__buttons">\
+          <a href="#" class="buttons__copy">Copy</a>\
+          <a href="#" class="buttons__more">More...</a>\
+        </div>\
+      ',
+      controller: 'MessageActionsCtrl',
       link: function (scope, element, attrs, ctrl) {
         element.bind('touchstart', function () {
           element.addClass('is-active');
@@ -26,11 +32,11 @@
           }, 200);
         });
         scope.$watch('selectedMessage', function (val) {
-          ctrl.setCopyVisibility(val ? true : false);
+          ctrl.setActionsVisibility(val ? true : false);
         });
-        scope.$watch('copySettings', function (obj, obj2) {
+        scope.$watch('actionsSettings', function (obj, obj2) {
           if ( ! ng.equals(obj, obj2)) { // post-init only
-            ctrl.setCopyPosition(obj.pos, obj.width);
+            ctrl.setActionsPosition(obj.pos, obj.width);
           }
         });
         scope.$on('$destroy', function () {

@@ -35,15 +35,12 @@
      * current message's time and the previous
      * message's time. If the delta is less than
      * 10 minutes, the time should be hidden.
-     * @return {Function}
+     * @param  {Integer} timestamp
+     * @param  {Integer} index
+     * @return {Boolean}
      */
     $scope.isHiddenTime = (function () {
       var previous = 0; // previous time
-      /**
-       * @param  {Integer} timestamp
-       * @param  {Integer} index
-       * @return {Boolean}
-       */
       return function (timestamp, index) {
         previous = index ? previous : 0;
         var d = timestamp - previous; // delta

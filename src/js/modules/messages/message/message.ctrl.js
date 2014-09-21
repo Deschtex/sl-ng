@@ -18,13 +18,15 @@
     $scope.getTypeClass = function (message) {
       return 'message--' + message.type;
     };
+    function select (message) {
+      $scope.$parent.selectedMessage = message;
+    }
+    function setCopyButtonSettings (settings) {
+      $scope.$parent.actionsSettings = settings;
+    }
     return ({ // exposed API
-      select: function (message) {
-        $scope.$parent.selectedMessage = message;
-      },
-      setCopyButtonSettings: function (settings) {
-        $scope.$parent.copySettings = settings;
-      }
+      select: select,
+      setCopyButtonSettings: setCopyButtonSettings
     });
   }
 

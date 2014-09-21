@@ -7,6 +7,7 @@
   //
   // Load sub-modules
   //
+  require('./search');
   require('./dialogue');
 
   /**
@@ -20,6 +21,7 @@
    * the dialogues view of the app.
    */
   var mod = ng.module('app.dialogues', [
+    'app.dialogues.search',  // Dialogue search sub-module
     'app.dialogues.dialogue' // Dialogue item sub-module
   ])
   .run(function () {

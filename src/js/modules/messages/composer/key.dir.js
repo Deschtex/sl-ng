@@ -28,6 +28,11 @@
         });
         element.bind('touchend', function () {
           $timeout.cancel(this.__timer);
+          ctrl.hideExtras();
+        });
+        scope.$on('$destroy', function () {
+          element.unbind('touchstart');
+          element.unbind('touchend');
         });
       }
     };

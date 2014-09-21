@@ -21,14 +21,10 @@
       <section
         class="view view--dialogues"
         ng-controller="DialoguesCtrl">
-        <h2>Dialogues</h2>
         <div class="view__content">
-          <div class="dialogues-search-bar"></div>
+          <dialogue-search></dialogue-search>
           <div class="dialogues">
-            <dialogue
-              ng-repeat="dialogue in dialogues"
-              ng-class="{ 'is-selected': isSelected(dialogue) }">
-            </dialogue>
+            <dialogue ng-repeat="dialogue in dialogues" ng-class="{ 'is-selected': isSelected(dialogue) }"></dialogue>
           </div>
         </div>
       </section>
@@ -36,29 +32,12 @@
         class="view view--messages"
         ng-controller="MessagesCtrl"
         ng-show="dialogue">
-        <h2>Messages</h2>
         <div class="view__content">
           <div class="messages">
-            <message
-              ng-repeat="message in dialogue.messages"
-              ng-class="[getSelectedClass(message), getTypeClass(message)]">
-            </message>
+            <message ng-repeat="message in dialogue.messages" ng-class="[getSelectedClass(message), getTypeClass(message)]"></message>
           </div>
-          <message-copy
-            text="Kopiera"
-            ng-show="isCopyVisible"
-            ng-style="{ left: copyPos.left + 'px', top: copyPos.top + 'px' }">
-          </message-copy>
-          <message-composer>
-            <div class="message-composer__input">
-              <input type="text" placeholder="iMessage">
-            </div>
-            <div class="message-composer__keyboard">
-              <keyboard ng-visible="keys.length">
-                <key ng-repeat="key in keys"></key>
-              </keyboard>
-            </div>
-          </message-composer>
+          <message-actions ng-show="isActionsVisible" ng-style="actionsPosition"></message-actions>
+          <message-composer></message-composer>
         </div>
       </section>
     </div>

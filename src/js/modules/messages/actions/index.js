@@ -7,20 +7,20 @@
   //
   // Load sub-module components
   //
-  var ctrl = require('./copy.ctrl');
-  var directive = require('./copy.dir');
+  var ctrl = require('./actions.ctrl');
+  var directive = require('./actions.dir');
 
   /**
    * @ngdoc module
-   * @name app.messages.copy
+   * @name app.messages.actions
    * @description
    *
-   * # app.messages.copy
+   * # app.messages.actions
    *
-   * The `app.messages.copy` module handles
-   * the messages copy button.
+   * The `app.messages.actions` module handles
+   * the messages actions button.
    */
-  var mod = ng.module('app.messages.copy', []);
+  var mod = ng.module('app.messages.actions', []);
 
   //
   // Mount sub-module components

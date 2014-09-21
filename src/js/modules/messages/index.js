@@ -8,7 +8,7 @@
   // Load sub-modules
   //
   require('./message');
-  require('./copy');
+  require('./actions');
   require('./composer');
 
   /**
@@ -23,7 +23,7 @@
    */
   var mod = ng.module('app.messages', [
     'app.messages.message', // Message item sub-module
-    'app.messages.copy',    // Message copy button sub-module
+    'app.messages.actions', // Message actions popup sub-module
     'app.messages.composer' // Message composer sub-module
   ])
   .run(function () {

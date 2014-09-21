@@ -18,13 +18,19 @@
     $scope.getExtras = function (key) {
       return Key.getExtras(key);
     };
+    function showValue (scope) {
+      console.log('showing value...', scope.key);
+    }
+    function showExtras (scope) {
+      console.log('showing extras...', scope.key);
+    }
+    function hideExtras () {
+      console.log('hiding extras...');
+    }
     return ({ // exposed API
-      showValue: function (scope) {
-        console.log('showing value...', scope.key);
-      },
-      showExtras: function (scope) {
-        console.log('showing extras...', scope.key);
-      },
+      showValue: showValue,
+      showExtras: showExtras,
+      hideExtras: hideExtras
     });
   }
 

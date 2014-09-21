@@ -2,33 +2,34 @@
 
 /////////////////////////////////////////
 ///
-///   MESSAGE COPY [SUB-MODULE]
-///   @module app.messages.copy
+///   MESSAGE ACTIONS [SUB-MODULE]
+///   @module app.messages.actions
 ///
 /////////////////////////////////////////
 
-message-copy {
+message-actions {
 
   @extend %sub-module;
 
   color: white;
   background-color: #111;
+  padding: 10px 20px;
   transition: opacity .2s linear;
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
+
+  .buttons__copy,
+  .buttons__more {
+    color: white;
+  }
 
   &.is-hidden {
     opacity: 0;
   }
   &.is-active {
     background-color: #333;
-  }
-
-  &:after {
-    content: attr(text);
-    padding: 10px 20px;
-    display: block;
   }
 
 }

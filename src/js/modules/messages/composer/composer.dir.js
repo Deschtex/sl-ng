@@ -14,8 +14,16 @@
   function F () {
     return {
       restrict: 'E',
+      template: '\
+        <div class="message-composer__input">\
+          <input type="text" placeholder="iMessage">\
+        </div>\
+        <div class="message-composer__keyboard">\
+          <key ng-repeat="key in keys"></key>\
+        </div>\
+      ',
       controller: 'MessageComposerCtrl',
-      link: function (scope, elem, attrs, ctrl) {
+      link: function (scope, element, attrs, ctrl) {
       }
     };
   }
