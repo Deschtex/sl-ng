@@ -1,6 +1,6 @@
 {
-  "name": "sl-ticket-app",
-  "description": "SL Ticket Generator (Angular.js)",
+  "name": "sl-ng",
+  "description": "",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
